@@ -1,9 +1,11 @@
-import Hero from "@/components/LandingPage/Hero";
+import { Hero, Popular } from "@/components/LandingPage";
+
 
 export default function Home() {
   return (
     <>
-     <Hero/>
+      <Hero />
+      <Popular />
     </>
   )
 }
