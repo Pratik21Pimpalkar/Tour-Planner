@@ -1,8 +1,13 @@
 import Link from "next/link"
 import { useState } from "react";
+import Login from "./Authentication/Login";
 
 const Navbar = () => {
     const [navbar, setNavbar] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const toggleModal = () => {
+        setIsOpen(!isOpen);
+    }
     return (
         <nav className="w-full  shadow-xl sticky top-0 z-50 bg-white">
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
@@ -13,13 +18,13 @@ const Navbar = () => {
                         </Link>
                         <div className="md:hidden">
                             <button
-                                className="p-2 text-gray-700 rounded-md outline-none focus:border-gray-400 focus:border"
+                                className="p-2 text-gray-700 rounded-md outline-none"
                                 onClick={() => setNavbar(!navbar)}
                             >
                                 {navbar ? (
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className="w-6 h-6 text-orange-600"
+                                        className="w-6 h-6 text-orange-600 "
                                         viewBox="0 0 20 20"
                                         fill="currentColor"
                                     >
@@ -66,7 +71,7 @@ const Navbar = () => {
                                 <Link href={'/'}>Contact Us</Link></li>
                         </ul>
 
-                        <div className="mt-3 space-y-2 lg:hidden md:inline-block">
+                        <div className="mt-3 space-y-2 md:hidden sm:inline-block">
                             <button
                                 className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
                             >
@@ -82,6 +87,7 @@ const Navbar = () => {
                 </div>
                 <div className="hidden space-x-2 md:inline-block">
                     <button
+                        onClick={toggleModal}
                         className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
                     >
                         Sign in
@@ -93,6 +99,7 @@ const Navbar = () => {
                     </button>
                 </div>
             </div>
+            <Login isOpen={isOpen} setIsOpen={setIsOpen} toggleModal={toggleModal} />
         </nav>
     )
 }
