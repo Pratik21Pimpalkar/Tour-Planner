@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { useState } from "react";
-import Login from "./Authentication/Login";
+import Login from "./Authentication/Modal";
 
 const Navbar = () => {
     const [navbar, setNavbar] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState("login")
     const [isOpen, setIsOpen] = useState(false);
     const toggleModal = () => {
         setIsOpen(!isOpen);
@@ -74,11 +75,21 @@ const Navbar = () => {
                         <div className="mt-3 space-y-2 md:hidden sm:inline-block">
                             <button
                                 className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
+                                onClick={() => {
+                                    toggleModal();
+                                    setShowLoginModal('login')
+                                }
+                                }
                             >
                                 Sign in
                             </button>
                             <button
                                 className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
+                                onClick={() => {
+                                    toggleModal();
+                                    setShowLoginModal('register')
+                                }
+                                }
                             >
                                 Sign up
                             </button>
@@ -87,19 +98,28 @@ const Navbar = () => {
                 </div>
                 <div className="hidden space-x-2 md:inline-block">
                     <button
-                        onClick={toggleModal}
+                        onClick={() => {
+                            toggleModal();
+                            setShowLoginModal('login')
+                        }
+                        }
                         className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
                     >
                         Sign in
                     </button>
                     <button
+                        onClick={() => {
+                            toggleModal();
+                            setShowLoginModal('register')
+                        }
+                        }
                         className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
                     >
                         Sign up
                     </button>
                 </div>
             </div>
-            <Login isOpen={isOpen} setIsOpen={setIsOpen} toggleModal={toggleModal} />
+            <Login isOpen={isOpen} setIsOpen={setIsOpen} showLoginModal={showLoginModal} />
         </nav>
     )
 }
