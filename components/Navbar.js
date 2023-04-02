@@ -59,7 +59,7 @@ const Navbar = () => {
                                 <Link href={'/'}>Home</Link>
                             </li>
                             <li className="hover:text-amber-900 cursor-pointer" >
-                                <Link href={'/book'}>Booking Form</Link></li>
+                                <Link href={'/trip'}>TripPlanner</Link></li>
                             <li className="hover:text-amber-900 cursor-pointer" >
                                 <Link href={'/'}>Category</Link></li>
                             <li className="hover:text-amber-900 cursor-pointer" >
