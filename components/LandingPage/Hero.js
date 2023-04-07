@@ -4,10 +4,12 @@ import { LocationMarkerIcon, CalendarIcon, UserGroupIcon } from '@heroicons/reac
 import { DatePicker, Form } from "antd";
 import moment from "moment";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 const Hero = () => {
     const api = '5ae2e3f221c38a28845f05b68ce6ae95583a6fad9ee3891cebf55e1f'
     const [minDate, setMinDate] = useState(new Date().toISOString().slice(0, 10));
-
+    const router = useRouter();
     return (
         <section>
             <div className=" ml-auto mr-auto flex flex-col items-center rounded-2xl mt-7 ">
@@ -28,23 +30,23 @@ const Hero = () => {
 
                 {/* Perference Form */}
 
-                < div className="relative grid grid-cols-1 gap-5 sm:grid-cols-2  h-25 sm:w-[700px] md:w-[900px] p-7 z-10 -top-10 bg-slate-50 shadow-md rounded-2xl" >
+                < div className="relative grid grid-cols-1 gap-5 sm:grid-cols-1  h-25 sm:w-[700px] md:w-[900px] p-7 z-10 -top-10 bg-slate-50 shadow-md rounded-2xl" >
                     {/* Left */}
                     < div >
                         <div className="flex  items-center">
                             <LocationMarkerIcon className="h-5 text-amber-500" />
                             <h2 className="font-semibold  text-xl ml-2">Location</h2>
                         </div>
-                        <input type="text" placeholder="Where do you want to go?" className="p-3 outline-none placeholder:text-gray-400 border-b bg-transparent placeholder:text-sm w-full" />
+                        <input type="text" placeholder="Where do you want to go?" className="p-3 outline-none placeholder:text-gray-400 border-b bg-transparent placeholder:text-md w-full" />
                     </div>
                     {/* Middle */}
-                    <div>
+                    {/* <div>
                         <div className="flex  items-center">
                             <CalendarIcon className="h-5 text-amber-500" />
                             <h2 className="font-semibold  text-xl ml-2">Date</h2>
                         </div>
                         <input type="date" min={minDate} placeholder="Where do you want to go?"  className="p-3 outline-none placeholder:text-gray-400 border-b bg-transparent placeholder:text-sm w-full" />
-                    </div>
+                    </div> */}
                     {/* Right */}
                     {/* <div>
                         <div className="flex  items-center">
@@ -53,8 +55,9 @@ const Hero = () => {
                         </div>
                         <input type="text" placeholder="Where do you want to go?" className="p-3 outline-none placeholder:text-gray-400 border-b bg-transparent placeholder:text-sm w-full" />
                     </div> */}
-                    <SearchIcon className="h-11 cursor-pointer text-center w-full sm:col-span-3 bg-orange-600 text-white rounded-full py-2 hover:bg-slate-700 " />
-
+                    <Link href='/locationDetails'>
+                        <SearchIcon className="h-11 cursor-pointer text-center w-full sm:col-span-3 bg-orange-600 text-white rounded-full py-2 hover:bg-slate-700 " />
+                    </Link>
                 </div>
             </div >
 

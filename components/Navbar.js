@@ -1,21 +1,16 @@
 import Link from "next/link"
 import { useState } from "react";
-import Login from "./Authentication/Modal";
 
 const Navbar = () => {
     const [navbar, setNavbar] = useState(false);
-    const [showLoginModal, setShowLoginModal] = useState("login")
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleModal = () => {
-        setIsOpen(!isOpen);
-    }
+
     return (
-        <nav className="w-full  shadow-xl sticky top-0 z-50 bg-white">
+    <nav className="w-full  shadow-xl sticky top-0 z-50 bg-white">
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                 <div>
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
                         <Link href="/">
-                            <h2 className="text-2xl font-bold text-orange-600">LOGO</h2>
+                            <h2 className="text-3xl font-bold text-black">LOGO</h2>
                         </Link>
                         <div className="md:hidden">
                             <button
@@ -57,7 +52,7 @@ const Navbar = () => {
                 </div>
                 <div>
                     <div
-                        className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
+                        className={`flex-1 text-lg justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
                             }`}
                     >
                         <ul className="font-semibold items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
@@ -75,21 +70,13 @@ const Navbar = () => {
                         <div className="mt-3 space-y-2 md:hidden sm:inline-block">
                             <button
                                 className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
-                                onClick={() => {
-                                    toggleModal();
-                                    setShowLoginModal('login')
-                                }
-                                }
+
                             >
                                 Sign in
                             </button>
                             <button
                                 className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
-                                onClick={() => {
-                                    toggleModal();
-                                    setShowLoginModal('register')
-                                }
-                                }
+
                             >
                                 Sign up
                             </button>
@@ -98,28 +85,19 @@ const Navbar = () => {
                 </div>
                 <div className="hidden space-x-2 md:inline-block">
                     <button
-                        onClick={() => {
-                            toggleModal();
-                            setShowLoginModal('login')
-                        }
-                        }
                         className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
                     >
                         Sign in
                     </button>
                     <button
-                        onClick={() => {
-                            toggleModal();
-                            setShowLoginModal('register')
-                        }
-                        }
+
                         className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
                     >
                         Sign up
                     </button>
                 </div>
             </div>
-            <Login isOpen={isOpen} setIsOpen={setIsOpen} showLoginModal={showLoginModal} />
+
         </nav>
     )
 }
