@@ -1,10 +1,11 @@
-import { Hero, Popular } from "@/components/LandingPage";
+import { Hero, Hero2, Popular } from "@/components/LandingPage";
 
 
 export default function Home() {
   return (
     <>
-      <Hero />
+      {/* <Hero /> */}
+      <Hero2 />
       <Popular />
     </>
   )

@@ -1,16 +1,30 @@
 import Link from "next/link"
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const [navbar, setNavbar] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const router = useRouter()
+    useEffect(() => {
+        function handleScroll() {
+            setScrollPosition(window.pageYOffset);
+        }
 
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
     return (
-    <nav className="w-full  shadow-xl sticky top-0 z-50 bg-white">
+        // <nav className="w-full  shadow-xl fixed top-0 z-50 bg-transparent">
+        <nav className={`bg-transparent  w-full  fixed pt-5 top-0 z-50 ${scrollPosition > 0 || router.pathname!=='/' ? ' bg-gray-900' : ''} text-white`}>
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                 <div>
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
                         <Link href="/">
-                            <h2 className="text-3xl font-bold text-black">LOGO</h2>
+                            <h2 className="text-3xl font-semibold text-white">LOGO</h2>
                         </Link>
                         <div className="md:hidden">
                             <button
@@ -67,33 +81,21 @@ const Navbar = () => {
                                 <Link href={'/'}>Contact Us</Link></li>
                         </ul>
 
-                        <div className="mt-3 space-y-2 md:hidden sm:inline-block">
+                        <div className="mt-3 space-y-2 md:hidden sm:inline-block ">
                             <button
-                                className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
+                                className="px-4 py-2 text-white  bg-orange-600 rounded-md shadow hover:bg-gray-800"
 
                             >
                                 Sign in
-                            </button>
-                            <button
-                                className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
-
-                            >
-                                Sign up
                             </button>
                         </div>
                     </div>
                 </div>
                 <div className="hidden space-x-2 md:inline-block">
                     <button
-                        className="px-4 py-2 text-white bg-orange-600 rounded-md shadow hover:bg-gray-800"
+                        className="px-4 py-3  text-white bg-transparent border-white border-[1px] max-w-full rounded-md shadow hover:bg-white hover:text-gray-900 "
                     >
-                        Sign in
-                    </button>
-                    <button
-
-                        className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
-                    >
-                        Sign up
+                        Sign in / Register
                     </button>
                 </div>
             </div>

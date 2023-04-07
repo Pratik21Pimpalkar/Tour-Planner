@@ -3,7 +3,7 @@ import React from 'react'
 
 const TripPlanner = () => {
     return (
-        <>
+        <section className='mt-24'>
             <h1 className='text-xl p-3 font-semibold bg-orange-400 text-yellow-50  shadow-sm border-b-2'> 7 Days Trip From Mumbai to Goa</h1>
 
             <div className='max-w-screen-xl m-auto mt-2'>
@@ -88,7 +88,7 @@ const TripPlanner = () => {
                 </div>
             </div >
 
-        </>
+        </section>
     )
 }
 
