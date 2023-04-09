@@ -8,3 +8,12 @@
   outline: none;
 }
 
+
+.swiper-pagination-bullet {
+  opacity: 1; /* Optional: Adjust opacity as needed */
+  background-color: #1e293b !important; /* Change to your desired color */
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #051036 !important; /* Change to your desired color */
+}

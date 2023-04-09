@@ -4,22 +4,25 @@ import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const [navbar, setNavbar] = useState(false);
-    const [scrollPosition, setScrollPosition] = useState(0);
+    const [scrolled, setScrolled] = useState(false);
     const router = useRouter()
     useEffect(() => {
-        function handleScroll() {
-            setScrollPosition(window.pageYOffset);
-        }
-
+        const handleScroll = () => {
+            const scrollTop = window.pageYOffset;
+            if (scrollTop > 50) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
         window.addEventListener('scroll', handleScroll);
-
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
     return (
         // <nav className="w-full  shadow-xl fixed top-0 z-50 bg-transparent">
-        <nav className={`bg-transparent  w-full  fixed pt-5 top-0 z-50 ${scrollPosition > 0 || router.pathname!=='/' ? ' bg-gray-900' : ''} text-white`}>
+        <nav className={`  w-full  fixed  top-0 z-50 ${router.pathname === '/' ? (scrolled ? 'bg-[#051036]' : 'bg-transparent') : 'bg-[#051036]'} text-white`}>
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                 <div>
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
@@ -69,7 +72,7 @@ const Navbar = () => {
                         className={`flex-1 text-lg justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
                             }`}
                     >
-                        <ul className="font-semibold items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
+                        <ul className="font-normal text-[1rem] items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
                             <li className="hover:text-amber-900 cursor-pointer" >
                                 <Link href={'/'}>Home</Link>
                             </li>
@@ -81,17 +84,16 @@ const Navbar = () => {
                                 <Link href={'/'}>Contact Us</Link></li>
                         </ul>
 
-                        <div className="mt-3 space-y-2 md:hidden sm:inline-block ">
+                        <div className="mt-3 space-y-2 md:hidden sm:inline-block  text-[1rem]">
                             <button
-                                className="px-4 py-2 text-white  bg-orange-600 rounded-md shadow hover:bg-gray-800"
-
+                                className="px-4 py-3  text-white bg-transparent border-white border-[1px] max-w-full rounded-md shadow hover:bg-white hover:text-gray-900 "
                             >
-                                Sign in
+                                Sign in / Register
                             </button>
                         </div>
                     </div>
                 </div>
-                <div className="hidden space-x-2 md:inline-block">
+                <div className="hidden space-x-2 md:inline-block text-[1rem]">
                     <button
                         className="px-4 py-3  text-white bg-transparent border-white border-[1px] max-w-full rounded-md shadow hover:bg-white hover:text-gray-900 "
                     >

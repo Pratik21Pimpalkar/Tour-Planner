@@ -20,9 +20,9 @@ const Hero2 = () => {
         <>
             <section className="min-h-[100vh]">
                 <div className="relative">
-                    <div className="bg-black opacity-30 h-[100vh] w-full z-10 absolute "></div>
-                    <div className="bg-gradient-to-r from-blue-950 via-transparent to-slate-950 bg-no-repeat bg-center bg-cover h-[100vh] w-full z-10 absolute "></div>
-                    <div className="relative h-screen">
+                    <div className="bg-black opacity-40 min-h-[120vh] lg:min-h-[100vh] w-full z-10 absolute "></div>
+                    <div className="bg-gradient-to-r from-blue-950 via-transparent to-slate-950 bg-no-repeat bg-center bg-cover min-h-[120vh] lg:min-h-[100vh] w-full z-10 absolute "></div>
+                    <div className="relative min-h-[120vh] lg:min-h-[100vh]">
                         <Image src={'/goa.jpg'} alt="s" fill style={{ objectPosition: `center ${scrollPosition / 2}px`, top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }} />
                     </div>
                     <div className="absolute top-[140px] sm:top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1 z-10 ">

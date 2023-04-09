@@ -25,8 +25,8 @@ function SearchBar() {
     }
 
     return (
-        <div className='bg-white p-5 sm:px-10  rounded-lg md:rounded-full '>
-            <form onSubmit={handleSearch} className="flex justify-center items-start md:items-center flex-col md:flex-row gap-3 sm:gap-0">
+        <div className='bg-white p-5 sm:px-10  rounded-lg lg:rounded-full '>
+            <form onSubmit={handleSearch} className="flex justify-center items-start lg:items-center flex-col lg:flex-row gap-3 sm:gap-0">
                 <div className="sm:mr-4">
                     <label htmlFor="location" className="block text-gray-700 font-bold mb-2">Location</label>
                     <input type="text" id="location" value={location} onChange={handleLocationChange} className="border rounded-lg px-4 pl-0 py-2  outline-none border-none w-64" placeholder="Enter a city or destination" required />
