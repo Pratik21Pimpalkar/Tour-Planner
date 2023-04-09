@@ -19,9 +19,9 @@ const ArtHistory = () => {
                     <h2 className="font-light text-lg py-1 text-[#697488] ">These popular destinations have a lot to offer
                     </h2>
                 </div>
-                <div className="mx-auto sm:ml-auto sm:mr-0 mt-3 sm:mt-0 flex items-center">
-                    <button className="artPrev p-5 hover:scale-125 hover:text-blue-700 hover:-translate-x-2 transition ease-out active:text-blue-900"><ArrowLeftIcon className="h-6" /></button>
-                    <div className="art" /> <button className="artNext p-5 hover:scale-125 hover:text-blue-700 hover:translate-x-2 transition ease-out active:text-blue-900"><ArrowRightIcon className="h-6" /></button>
+                <div className="mx-auto sm:ml-auto sm:mr-0 mt-3 sm:mt-0 flex items-center space-x-2">
+                    <button className="artPrev p-3 hover:scale-105 hover:text-blue-700 hover:-translate-x-2 transition ease-out active:text-blue-900 bg-gray-100 rounded-full"><ArrowLeftIcon className="h-5" /></button>
+                    <div className="art" /> <button className="artNext p-3 hover:scale-105 hover:text-blue-700 hover:translate-x-2 transition ease-out active:text-blue-900 bg-gray-100 rounded-full"><ArrowRightIcon className="h-5" /></button>
                 </div>
             </div>
             <div className="w-4/5 my-8 sm:text-xl m-auto">
@@ -31,7 +31,7 @@ const ArtHistory = () => {
                     slidesPerView={1}
                     // centeredSlides={true}
                     autoplay={{
-                        delay: 2500,
+                        delay: 3500,
                         disableOnInteraction: false,
                     }}
                     pagination={{

@@ -3,7 +3,7 @@ import Hotels from "@/components/ExploreLocation/Hotels"
 const locationDetails = () => {
   return (
     <>
-      <h1 className="w-4/5 m-auto mt-20 font-bold text-[40px]">Get a Tour of <span className="text-orange-600"> Nagpur</span></h1>
+      <h1 className="w-4/5 m-auto mt-36 font-bold text-[40px]">Get a Tour of <span className="text-[#6388ff]"> Nagpur</span></h1>
       <Hotels />
       <ArtHistory />
     </>

@@ -20,8 +20,8 @@ const Hotels = () => {
                     </h2>
                 </div>
                 <div className="mx-auto sm:ml-auto sm:mr-0 mt-3 sm:mt-0 flex items-center">
-                    <button className="review-swiper-button-prev p-5 hover:scale-125 hover:text-blue-700 hover:-translate-x-2 transition ease-out active:text-blue-900"><ArrowLeftIcon className="h-6" /></button>
-                    <div className="my-custom-pagination-div" /> <button className="review-swiper-button-next p-5 hover:scale-125 hover:text-blue-700 hover:translate-x-2 transition ease-out active:text-blue-900"><ArrowRightIcon className="h-6" /></button>
+                    <button className="hotelsPrev p-3 hover:scale-105 hover:text-blue-700 hover:-translate-x-2 transition ease-out active:text-blue-900 bg-gray-100 rounded-full"><ArrowLeftIcon className="h-5" /></button>
+                    <div className="hotels" /> <button className="hotelsNext p-3 hover:scale-105 hover:text-blue-700 hover:translate-x-2 transition ease-out active:text-blue-900 bg-gray-100 rounded-full"><ArrowRightIcon className="h-5" /></button>
                 </div>
             </div>
             <div className="w-4/5 my-8 sm:text-xl m-auto">
@@ -37,12 +37,12 @@ const Hotels = () => {
                     pagination={{
                         // clickable: true,
                         // renderCustom: renderCustomPagination
-                        el: '.my-custom-pagination-div',
+                        el: '.hotels',
                         clickable: true,
                     }}
                     navigation={{
-                        nextEl: '.review-swiper-button-next',
-                        prevEl: '.review-swiper-button-prev',
+                        nextEl: '.hotelsNext',
+                        prevEl: '.hotelsPrev',
                     }}
                     breakpoints={{
                         0: {

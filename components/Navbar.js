@@ -9,7 +9,7 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.pageYOffset;
-            if (scrollTop > 50) {
+            if (scrollTop > 10) {
                 setScrolled(true);
             } else {
                 setScrolled(false);
@@ -22,7 +22,7 @@ const Navbar = () => {
     }, []);
     return (
         // <nav className="w-full  shadow-xl fixed top-0 z-50 bg-transparent">
-        <nav className={`  w-full  fixed  top-0 z-50 ${router.pathname === '/' ? (scrolled ? 'bg-[#051036]' : 'bg-transparent') : 'bg-[#051036]'} text-white`}>
+        <nav className={` ${scrolled ? 'shadow-2xl' : ''} w-full  fixed p-2  top-0 z-50 ${router.pathname === '/' ? (scrolled ? 'bg-[#051036]' : 'bg-transparent') : 'bg-[#051036]'} text-white`}>
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                 <div>
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
@@ -32,12 +32,15 @@ const Navbar = () => {
                         <div className="md:hidden">
                             <button
                                 className="p-2 text-gray-700 rounded-md outline-none"
-                                onClick={() => setNavbar(!navbar)}
+                                onClick={() => {
+                                    setNavbar(!navbar);
+                                    setScrolled(true)
+                                }}
                             >
                                 {navbar ? (
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className="w-6 h-6 text-orange-600 "
+                                        className="w-6 h-6 text-[#6388ff] "
                                         viewBox="0 0 20 20"
                                         fill="currentColor"
                                     >
@@ -50,7 +53,7 @@ const Navbar = () => {
                                 ) : (
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className="w-6 h-6 text-orange-600"
+                                        className="w-6 h-6 text-[#6388ff]"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -73,14 +76,14 @@ const Navbar = () => {
                             }`}
                     >
                         <ul className="font-normal text-[1rem] items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-                            <li className="hover:text-amber-900 cursor-pointer" >
+                            <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/'}>Home</Link>
                             </li>
-                            <li className="hover:text-amber-900 cursor-pointer" >
+                            <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/trip'}>TripPlanner</Link></li>
-                            <li className="hover:text-amber-900 cursor-pointer" >
+                            <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/'}>Category</Link></li>
-                            <li className="hover:text-amber-900 cursor-pointer" >
+                            <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/'}>Contact Us</Link></li>
                         </ul>
 

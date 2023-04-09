@@ -21,7 +21,7 @@ const Popular = () => {
 
 
     return (
-        <section className="flex items-center flex-col mt-28">
+        <section className="flex items-center flex-col mt-24 mb-10 ">
             <div className="grid w-4/5 grid-cols-1 sm:grid-cols-2 ">
                 <div className="">
                     <h2 className="font-bold text-3xl py-2">Popular Destinations

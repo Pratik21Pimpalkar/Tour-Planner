@@ -8,12 +8,14 @@ module.exports = {
   plugins: [],
   theme: {
     // colors: {
-    //   // "Mystic_Blue": "#091D36",
-    //   // "Venice_Blue": "#0B4C84",
-    //   // "Danube_Blue": "#598EC2",
-    //   // "Blue_Iris": "#9BC1EE",
-    //   // "Gray_Flash": "#F0EFF5"
+    // mysticBlue: "#091D36",
+    // veniceBlue: "#0B4C84",
+    // danubeBlue: "#598EC2",
+    // blueIris: "#9BC1EE",
+    // grayFlash: "#F0EFF5",
 
     // },
+
+
   },
 }
