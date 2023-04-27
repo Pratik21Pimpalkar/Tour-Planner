@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { SearchIcon } from '@heroicons/react/outline'
 import Link from 'next/link';
+import { useAutoCompleteSearchMutation } from '@/services/api';
+import debounceHook from '../debounceHook';
 
 function SearchBar() {
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState({ query: '' });
+    const [suggestions, setSuggestions] = useState([]);
     const [arrivalDate, setArrivalDate] = useState('');
     const [departureDate, setDepartureDate] = useState('');
-
-    function handleLocationChange(event) {
-        setLocation(event.target.value);
-    }
-
+    const [timeoutId, setTimeoutId] = useState(null);
     function handleArrivalDateChange(event) {
         setArrivalDate(event.target.value);
     }
@@ -24,12 +23,79 @@ function SearchBar() {
         // Add code here to handle search functionality
     }
 
+    const handleSelectSuggestion = (text) => {
+        setLocation({ query: text });
+
+
+    }
+    const options = { pollingInterval: 1000, skip: location.query.trim() === '' };
+    const [trigger, { isSuccess, data }] = useAutoCompleteSearchMutation(location, options);
+    console.log(data);
+    const handleLocationChange = (e) => {
+        setLocation({ query: e.target.value });
+        clearTimeout(timeoutId)
+        if (location.query.trim() !== "") {
+            const newTimeoutId = setTimeout(() => {
+                trigger({ query: e.target.value });
+                // console.log(result?.data?.results);
+                if (isSuccess) {
+                    setSuggestions(
+                        data?.features.map((result) => {
+                            return (
+                                {
+                                    long: result?.properties?.lon,
+                                    name: result?.properties?.name,
+                                    lat: result?.properties?.lat,
+                                    formatted: result?.properties?.formatted,
+                                    state: result?.properties?.state,
+                                    country: result?.properties?.country,
+                                    county: result?.properties?.county,
+                                    place_id: result?.properties?.place_id
+
+                                    // fsq_id: result?.place?.fsq_id,
+                                    // place: result?.place?.name,
+                                    // primary: result?.text?.primary,
+                                    // secondary: result?.text?.secondary
+
+                                    // address: result?.place?.location.address,
+                                    // locality: result?.place?.location.locality,
+                                    // region: result?.place?.location.region,
+                                    // formattedAddress: result?.place?.location.formatted_address,
+
+
+                                }
+                            )
+                        }
+                        ))
+                }
+                console.log(typeof (suggestions));
+            }, 500)
+            console.log((suggestions));
+            setTimeoutId(newTimeoutId)
+        }
+    }
+
+
     return (
         <div className='bg-white p-5 sm:px-10  rounded-lg lg:rounded-full '>
             <form onSubmit={handleSearch} className="flex justify-center items-start lg:items-center flex-col lg:flex-row gap-3 sm:gap-0">
-                <div className="sm:mr-4">
+                <div className="sm:mr-4 relative">
                     <label htmlFor="location" className="block text-gray-700 font-bold mb-2">Location</label>
-                    <input type="text" id="location" value={location} onChange={handleLocationChange} className="border rounded-lg px-4 pl-0 py-2  outline-none border-none w-64" placeholder="Enter a city or destination" required />
+                    <input type="text" id="location" value={location.query} onChange={handleLocationChange} className="border rounded-lg px-4 pl-0 py-2  outline-none border-none w-64" placeholder="Enter a city or destination" required />
+                    {suggestions.length > 0 && (
+                        <ul className="absolute -left-2 z-10 w-full bg-white  rounded-xl mt-2 h-48 overflow-scroll">
+                            {suggestions.length > 0 && suggestions.map((suggestion, index) => (
+                                <li
+                                    key={index}
+                                    className="px-3 py-2 hover:bg-gray-200 cursor-pointer border-gray-50 border-2"
+                                    onClick={() => handleSelectSuggestion(suggestion?.formatted)}
+                                >
+                                    {/* <span className='font-medium'>{suggestion?.name}</span> {", "} { suggestion?.state} {","}{suggestion?.country} */}
+                                    {suggestion?.formatted}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
                 <div className="sm:mr-4">
                     <label htmlFor="arrival-date" className="block text-gray-700 font-bold mb-2">Arrival Date</label>
