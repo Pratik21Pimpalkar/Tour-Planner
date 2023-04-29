@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { SearchIcon } from '@heroicons/react/outline'
+import { useAutoCompleteSearchMutation, useGetPlaceDetailsMutation, fetchApiData } from '@/services/api';
+import { useDispatch } from 'react-redux';
 import Link from 'next/link';
-import { useAutoCompleteSearchMutation } from '@/services/api';
-import debounceHook from '../debounceHook';
 
 function SearchBar() {
+    const [place_id, setPlace_id] = useState("");
+    const [timeoutId, setTimeoutId] = useState(null);
     const [location, setLocation] = useState({ query: '' });
     const [suggestions, setSuggestions] = useState([]);
     const [arrivalDate, setArrivalDate] = useState('');
     const [departureDate, setDepartureDate] = useState('');
-    const [timeoutId, setTimeoutId] = useState(null);
+
+    const dispatch = useDispatch();
     function handleArrivalDateChange(event) {
         setArrivalDate(event.target.value);
     }
@@ -23,14 +26,15 @@ function SearchBar() {
         // Add code here to handle search functionality
     }
 
-    const handleSelectSuggestion = (text) => {
-        setLocation({ query: text });
 
-
+    const handleSelectSuggestion = (place) => {
+        setLocation({ query: place.formatted });
+        setPlace_id(place.place_id)
+        setSuggestions([])
     }
+
     const options = { pollingInterval: 1000, skip: location.query.trim() === '' };
     const [trigger, { isSuccess, data }] = useAutoCompleteSearchMutation(location, options);
-    console.log(data);
     const handleLocationChange = (e) => {
         setLocation({ query: e.target.value });
         clearTimeout(timeoutId)
@@ -75,6 +79,10 @@ function SearchBar() {
         }
     }
 
+    const [search, result] = useGetPlaceDetailsMutation(place_id, options);
+    const placeSearch = () => {
+        dispatch(fetchApiData({ place_id: place_id }))
+    }
 
     return (
         <div className='bg-white p-5 sm:px-10  rounded-lg lg:rounded-full '>
@@ -88,7 +96,7 @@ function SearchBar() {
                                 <li
                                     key={index}
                                     className="px-3 py-2 hover:bg-gray-200 cursor-pointer border-gray-50 border-2"
-                                    onClick={() => handleSelectSuggestion(suggestion?.formatted)}
+                                    onClick={() => handleSelectSuggestion(suggestion)}
                                 >
                                     {/* <span className='font-medium'>{suggestion?.name}</span> {", "} { suggestion?.state} {","}{suggestion?.country} */}
                                     {suggestion?.formatted}
@@ -107,7 +115,7 @@ function SearchBar() {
                 </div>
                 <button type="submit" className="w-full  mt-1 sm:mt-0 bg-gray-950 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">
                     <Link href={'/locationDetails'}>
-                        <div className='flex gap-2 items-center w-full justify-center  '>
+                        <div className='flex gap-2 items-center w-full justify-center pointer ' onClick={placeSearch}>
                             <SearchIcon className='h-5' />Search</div>
                     </Link>
                 </button>

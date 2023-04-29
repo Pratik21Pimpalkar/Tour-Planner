@@ -82,7 +82,7 @@ const Navbar = () => {
                             <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/trip'}>TripPlanner</Link></li>
                             <li className="hover:text-[#6388ff] cursor-pointer" >
-                                <Link href={'/'}>Category</Link></li>
+                                <Link href={'/locationDetails'}>Category</Link></li>
                             <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/'}>Contact Us</Link></li>
                         </ul>
