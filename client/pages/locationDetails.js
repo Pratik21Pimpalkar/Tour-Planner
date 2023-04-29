@@ -3,7 +3,7 @@ import Hotels from "@/components/ExploreLocation/Hotels"
 import { useSelector } from "react-redux"
 import { travelApi } from "@/services/api"
 import { LoaderExample } from "@/components/Loader"
-const locationDetails = () => {
+const LocationDetails = () => {
 
   const { data: place, isLoading, isError, isSuccess } = useSelector(state => state.placeDetails)
   console.log(place);
@@ -21,4 +21,4 @@ const locationDetails = () => {
   )
 }
 
-export default locationDetails
+export default LocationDetails
