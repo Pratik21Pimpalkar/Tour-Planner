@@ -8,8 +8,12 @@ import { Autoplay, Pagination, Navigation } from "swiper";
 import { data } from '../LandingPage/HeroCarouselData'
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import Cards from './Cards';
+import { useSelector } from 'react-redux';
 
 const ArtHistory = () => {
+    const { data: allData, isLoading, isError, isSuccess } = useSelector(state => state.placeDetails)
+    const tourismData = allData?.tourism?.features
+
     return (
         <>
             <div className="grid w-4/5 grid-cols-1 sm:grid-cols-2  mx-auto mt-11">
@@ -64,7 +68,7 @@ const ArtHistory = () => {
 
                 >
                     {
-                        data.map(({ name, img }, id) => <SwiperSlide key={id}><Cards name={name} img={img} /></SwiperSlide>)
+                        isSuccess && tourismData.map((data, id) => <SwiperSlide key={data.properties.place_id}><Cards data={data.properties} /></SwiperSlide>)
                     }
                 </Swiper>
             </div>

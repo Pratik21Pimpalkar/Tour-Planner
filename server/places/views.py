@@ -55,13 +55,17 @@ class getPlaceDetails(APIView):
             'Authorization': authorization,
             "accept": "application/json",
         }
-        Hotelresponse = requests.get(HotelUrl, headers=headers)
-        data1 = Hotelresponse.json()
-        TourismResponse = requests.get(TourismUrl, headers=headers)
-        data2 = TourismResponse.json()
 
-        combined_data = {}
-        combined_data['hotels'] = data1
-        combined_data['tourism'] = data2
-
-        return JsonResponse(combined_data, safe=False)
+        try:
+            Hotelresponse = requests.get(HotelUrl, headers=headers)
+            data1 = Hotelresponse.json()
+           
+            TourismResponse = requests.get(TourismUrl, headers=headers)
+            data2 = TourismResponse.json()
+           
+            combined_data = {}
+            combined_data['hotels'] = data1
+            combined_data['tourism'] = data2
+            return JsonResponse(combined_data, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': "Unable to fetch placedata !"}, status=500)
