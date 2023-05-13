@@ -25,7 +25,7 @@ export const LoaderExample = () => {
     return (
         <motion.div className='fixed z-50 top-0 right-0 bottom-0 left-0 bg-[#f8fbff] text-black flex items-center justify-center  flex-col'>
             {/* CLICK ME!!! */}
-            <h2  className='text-[25px] md:text-[50px] my-2 text-center'>Generating Trip</h2>
+            <h2 className='text-[25px] md:text-[50px] my-2 text-center'>Generating Trip</h2>
             {isLoading && (
                 <>
                     <span className='font-bold text-xl my-3'>Wait a moment ...</span>

@@ -42,9 +42,6 @@ export const travelApi = createApi({
 export const { useAutoCompleteSearchMutation, useGetPlaceDetailsMutation } = travelApi
 
 
-
-
-
 const initialState = {
     data: null,
     isLoading: false,

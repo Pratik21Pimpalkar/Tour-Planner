@@ -19,7 +19,8 @@ class autoCompletePlaceSearch(APIView):
         }
         response = requests.get(url, data=data,  headers=headers)
         data = response.json()
-        return JsonResponse(data, safe=False)
+        data2 = data['features']
+        return JsonResponse(data2, safe=False)
 
 
 # class getPlaceDetails(APIView):
@@ -59,13 +60,26 @@ class getPlaceDetails(APIView):
         try:
             Hotelresponse = requests.get(HotelUrl, headers=headers)
             data1 = Hotelresponse.json()
-           
+
             TourismResponse = requests.get(TourismUrl, headers=headers)
             data2 = TourismResponse.json()
-           
+
             combined_data = {}
             combined_data['hotels'] = data1
             combined_data['tourism'] = data2
             return JsonResponse(combined_data, safe=False)
         except Exception as e:
             return JsonResponse({'error': "Unable to fetch placedata !"}, status=500)
+
+
+class chatgpt(APIView):
+    def post(self, request):
+        url = f'https://c4-na.altogic.com/e:645a75c1bc487bc47cf0bd50/travel'
+
+        body = f'Generate a personalized travel itinerary for a trip to India with a budget of 1000000 INR. The traveler is interested in a  1 days vacation and enjoys Worshipping. They are looking for Luxary accommodations and prefer Flight and bus transportation. The itinerary should include Sports Games activities and Indian dining options. Please provide a detailed itinerary with daily recommendations for 1   days, including suggested destinations, activities, and dining options. The itinerary should be written in English Hindi Marathi. Note the  dates of trip are from 28/05/2023 to 4/06/2023 '
+        data = {
+            'prompt': body
+        }
+        response = requests.post(url, data=data)
+        res = response.json()
+        return JsonResponse(res, safe=False)
