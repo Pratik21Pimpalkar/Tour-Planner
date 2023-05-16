@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { cities } from '../LandingPage/cities';
 import { DatePicker, Select } from 'antd';
+import { useDispatch } from 'react-redux';
+import { generateTrip } from '@/services/tripPlanReducer';
+import { useRouter } from 'next/router';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const Form = () => {
-    const [search, setSearch] = useState('');
-    const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
+    const router = useRouter();
     const [tripData, setTripData] = useState({
         places: [],
         startDate: "",
@@ -18,30 +21,6 @@ const Form = () => {
         cuisines: [],
         languages: []
     })
-    function handleSearch(event) {
-        setSearch(event.target.value);
-    }
-
-    function toggleDropdown() {
-        setOpen(!open);
-    }
-
-    function handleItemClick(item) {
-        setSearch(item);
-        setOpen(false);
-    }
-    const dropdownRef = useRef(null);
-    function handleClickOutside(event) {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setOpen(false);
-        }
-    }
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
     const accomodation = [
         { label: "Hotel", value: "Hotel" },
         { label: "Boutique Hotel", value: "Boutique Hotel" },
@@ -54,6 +33,7 @@ const Form = () => {
     ];
     const options = [
         { label: "History", value: "History" },
+        { label: "Culture", value: "Culture" },
         { label: "Art", value: "Art" },
         { label: "Food", value: "Food" },
         { label: "Music", value: "Music" },
@@ -71,13 +51,13 @@ const Form = () => {
         { label: "Bicycle", value: "Bicycle" },
         { label: "Motorcycle", value: "Motorcycle" },
         { label: "Boat", value: "Boat" },
-        { label: "Walking", value: "Walking" },
+        // { label: "Walking", value: "Walking" },
     ];
     const cuisines = [
+        { label: "Indian", value: "Indian" },
         { label: "Italian", value: "Italian" },
         { label: "Mexican", value: "Mexican" },
         { label: "Chinese", value: "Chinese" },
-        { label: "Indian", value: "Indian" },
         { label: "Japanese", value: "Japanese" },
         { label: "Thai", value: "Thai" },
         { label: "French", value: "French" },
@@ -97,48 +77,20 @@ const Form = () => {
     ];
     const languages = [
         { label: "English", value: "English" },
-        { label: "Spanish", value: "Spanish" },
-        { label: "French", value: "French" },
-        { label: "German", value: "German" },
-        { label: "Mandarin", value: "Mandarin" },
-        { label: "Arabic", value: "Arabic" },
-        { label: "Russian", value: "Russian" },
-        { label: "Portuguese", value: "Portuguese" },
-        { label: "Japanese", value: "Japanese" },
-        { label: "Korean", value: "Korean" },
         { label: "Hindi", value: "Hindi" },
-        { label: "Bengali", value: "Bengali" },
-        { label: "Tamil", value: "Tamil" },
-        { label: "Telugu", value: "Telugu" },
         { label: "Marathi", value: "Marathi" },
-        { label: "Gujarati", value: "Gujarati" },
     ];
+
+    const submitTripForm = () => {
+        dispatch(generateTrip(tripData))
+        router.push('/plantrip/trip')
+
+    }
     return (
         <div className='mt-36 px-7 sm:px-2'>
             <h1 className='capitalize text-center text-[2.25rem] font-bold text-blue-900 my-10 bg-[aliceblue] p-2'  > Plan your Vacations</h1>
             <div className="md:w-[1024px] mx-auto ">
                 <div className='grid sm:grid-cols-3 grid-cols-1 gap-5 mb-5'>
-                    {/* <div className=' md:w-4/6 w-full bg-white p-2 rounded-md flex justify-center items-start flex-col '>
-                        <input
-                            type="search"
-                            value={search}
-                            onClick={toggleDropdown}
-                            onChange={handleSearch}
-                            placeholder="Search Here..."
-                            className="py-4 px-4 w-full rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500"
-                        />
-                        <ul
-                            ref={dropdownRef}
-                            className={`${open ? 'block -translate-y-[-8rem]' : 'hidden translate-y-0'
-                                } h-48 md:w-2/6 w-full absolute overflow-y-auto bg-white rounded shadow-md z-50 transition-opacity transition-transform`}
-                        >
-                            {
-                                cities.filter((c) => c.toLowerCase().startsWith(search.toLowerCase())).map(city => <li key={city} className="w-full text-gray-700 p-4 mt-2 cursor-pointer hover:bg-gray-100" onClick={() => setSearch(city)}>
-                                    {city}
-                                </li>)
-                            }
-                        </ul>
-                    </div> */}
                     <Select mode="tags" className="py-4 px-4 w-full col-span-2  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500" style={{ width: '100%' }} placeholder="Enter destination" onChange={(value) => setTripData({ ...tripData, places: value })}>
                         {cities.map((city) => {
                             return (
@@ -153,8 +105,10 @@ const Form = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
-                    <input type="number" className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in INR)'
+                    <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in ₹)'
                         onChange={(e) => setTripData({ ...tripData, budget: e.target.value })}
+                        min={10000}
+
                     />
 
                     <Select
@@ -184,7 +138,7 @@ const Form = () => {
                         onChange={(value) => setTripData({ ...tripData, transport: value })}
                         options={transport}
                     />
-                    <Select
+                    {/* <Select
                         mode="multiple"
                         allowClear
                         className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
@@ -192,7 +146,7 @@ const Form = () => {
                         defaultValue={[]}
                         onChange={(value) => setTripData({ ...tripData, activities: value })}
                         options={activities}
-                    />
+                    /> */}
                     <Select
                         mode="multiple"
                         allowClear
@@ -213,11 +167,17 @@ const Form = () => {
                     />
                 </div>
                 <div className='w-full flex justify-center mt-10'>
-                    <button type="button" className="text-white mx-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Build Your Trip</button>
+                    {tripData.accomodation.length > 0  && tripData.interest.length > 0 && tripData.languages.length > 0 && tripData.places.length > 0 && tripData.budget.trim() !== ""
+                        ? <><button type="button" className="text-white mx-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={submitTripForm}>Build Your Trip</button> </> :
+                        <>
+                            <button type="button" className="text-white bg-blue-400 dark:bg-blue-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center" disabled>Build Your Trip</button>
+
+                        </>
+                    }
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 }
 

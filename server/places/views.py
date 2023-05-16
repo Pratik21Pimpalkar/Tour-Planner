@@ -1,6 +1,8 @@
 import requests
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from datetime import datetime as dt
+import json
 
 
 class autoCompletePlaceSearch(APIView):
@@ -74,12 +76,33 @@ class getPlaceDetails(APIView):
 
 class chatgpt(APIView):
     def post(self, request):
-        url = f'https://c4-na.altogic.com/e:645a75c1bc487bc47cf0bd50/travel'
+        data = request.data
+        print(data)
+        places = ", ".join(data['places'])
+        # activities = ", ".join(data['activities'])
+        languages = ", ".join(data['languages'])
+        startDate = data['startDate']
+        endDate = data['endDate']
+        cuisines = ", ".join(data['cuisines'])
+        budget = data['budget']
+        interest = ", ".join(data['interest'])
+        accomodation = ", ".join(data['accomodation'])
+        transport = ", ".join(data['transport'])
+        days = (dt.strptime(endDate, "%Y-%m-%d") -
+                dt.strptime(startDate, "%Y-%m-%d")).days
 
-        body = f'Generate a personalized travel itinerary for a trip to India with a budget of 1000000 INR. The traveler is interested in a  1 days vacation and enjoys Worshipping. They are looking for Luxary accommodations and prefer Flight and bus transportation. The itinerary should include Sports Games activities and Indian dining options. Please provide a detailed itinerary with daily recommendations for 1   days, including suggested destinations, activities, and dining options. The itinerary should be written in English Hindi Marathi. Note the  dates of trip are from 28/05/2023 to 4/06/2023 '
+        prompt = f'Generate a personalized travel itinerary for a trip to {places} with a budget of {budget} INR. The traveler is interested in a  {days} days vacation and enjoys {interest}. They are looking for {accomodation} accommodations and prefer {transport} transportation. The itinerary should include  {cuisines} dining options. Please provide a short itinerary with daily recommendations for {days}   days, including suggested destinations, activities, and dining options. The itinerary should be written in {languages}. Note the  dates of trip are from {startDate} to {endDate}.Add daywise accommodations type,place and address.'
+        format = '{tripName:\"\",subTitle:\"\",description:\"\",itinerary:[{date:\"\",Day:\"\",accommodation:{type:\"\",name:\"\",address:\"\",},dining:{breakfast:{dishName:\"\",placeName:\"\",address:\"\"},dinner:{dishName:\"\",placeName:\"\",address:\"\"},lunch:{dishName:\"\",placeName:\"\",address:\"\"},},destination:\"\",description:\"\",placeToVisit:[{placeSpot:\"\",address:\"\",placeType:\"\"}]}]}'
+
+        body = prompt+format
+        # print(body)
         data = {
             'prompt': body
         }
+        url = f'https://c4-na.altogic.com/e:645a75c1bc487bc47cf0bd50/travel'
         response = requests.post(url, data=data)
         res = response.json()
-        return JsonResponse(res, safe=False)
+        p = res['choices'][0]['message']['content']
+        print(p)
+        resp = json.loads(p)
+        return JsonResponse(resp, safe=False)
