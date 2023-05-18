@@ -87,11 +87,11 @@ const Form = () => {
 
     }
     return (
-        <div className='mt-36 px-7 sm:px-2'>
+        <div className='mt-36 px-7 sm:px-2 min-h-[100vh]'>
             <h1 className='capitalize text-center text-[2.25rem] font-bold text-blue-900 my-10 bg-[aliceblue] p-2'  > Plan your Vacations</h1>
             <div className="md:w-[1024px] mx-auto ">
                 <div className='grid sm:grid-cols-3 grid-cols-1 gap-5 mb-5'>
-                    <Select mode="tags" className="py-4 px-4 w-full col-span-2  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500" style={{ width: '100%' }} placeholder="Enter destination" onChange={(value) => setTripData({ ...tripData, places: value })}>
+                    <Select mode="tags" className="py-4 px-4 w-full col-span-2  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500" style={{ width: '100%' }} placeholder="Enter destination" value={tripData.places} onChange={(value) => setTripData({ ...tripData, places: value })} >
                         {cities.map((city) => {
                             return (
                                 <Option key={city}>{city}</Option>
@@ -105,7 +105,7 @@ const Form = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
-                    <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in ₹)'
+                    <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in ₹)'
                         onChange={(e) => setTripData({ ...tripData, budget: e.target.value })}
                         min={10000}
 
@@ -117,24 +117,27 @@ const Form = () => {
                         className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         placeholder="Interest"
                         defaultValue={[]}
-                        onChange={(value) => setTripData({ ...tripData, interest: value })}
+                        value={tripData.interest}
+                        onChange={(value) => setTripData({ ...tripData, interest: value.slice(-2) })}
                         options={options}
                     />
                     <Select
-                        mode="multiple"
+                        mode="single"
                         allowClear
                         className='py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         placeholder="Accomodation"
                         defaultValue={[]}
+                        value={tripData.accomodation}
                         onChange={(value) => setTripData({ ...tripData, accomodation: value })}
                         options={accomodation}
                     />
                     <Select
-                        mode="multiple"
+                        mode="single"
                         allowClear
                         className='py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         placeholder="Transport"
                         defaultValue={[]}
+                        value={tripData.transport}
                         onChange={(value) => setTripData({ ...tripData, transport: value })}
                         options={transport}
                     />
@@ -152,22 +155,23 @@ const Form = () => {
                         allowClear
                         className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         placeholder="Cuisine"
-                        defaultValue={[]}
-                        onChange={(value) => setTripData({ ...tripData, cuisines: value })}
+                        defaultValue={[]} value={tripData.cuisines}
+                        onChange={(value) => setTripData({ ...tripData, cuisines: value.slice(-2) })}
                         options={cuisines}
                     />
                     <Select
-                        mode="multiple"
+                        mode="single"
                         allowClear
                         className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         placeholder="Language of Plan"
                         defaultValue={[]}
+                        value={tripData.languages}
                         onChange={(value) => setTripData({ ...tripData, languages: value })}
                         options={languages}
                     />
                 </div>
                 <div className='w-full flex justify-center mt-10'>
-                    {tripData.accomodation.length > 0  && tripData.interest.length > 0 && tripData.languages.length > 0 && tripData.places.length > 0 && tripData.budget.trim() !== ""
+                    {tripData.accomodation.length > 0 && tripData.interest.length > 0 && tripData.languages.length > 0 && tripData.places.length > 0 && tripData.budget.trim() !== ""
                         ? <><button type="button" className="text-white mx-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={submitTripForm}>Build Your Trip</button> </> :
                         <>
                             <button type="button" className="text-white bg-blue-400 dark:bg-blue-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center" disabled>Build Your Trip</button>

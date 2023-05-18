@@ -23,14 +23,16 @@ const TripCards = ({ itinerary }) => {
             </div>
             <div className="accomodation px-5 py-3">
                 <h1 className='font-[Montserrat] text-[16.5px] font-[700] text-[#223544]  uppercase text-center bg-blue-50 py-2 mb-2 leading-loose'>Accomodation</h1>
-                <HotelIcon sx={{ fontSize: "2rem", color: "#005985" }} />
-                <h1 className='font-[Montserrat] text-[12px] font-[700] text-[#223544] uppercase'>{itinerary.accommodation?.type}</h1>
+                <div className='flex gap-2 items-center mb-2'>
+                    <HotelIcon sx={{ fontSize: "2rem", color: "#005985" }} />
+                    <h1 className='font-[Montserrat] text-[12px] font-[700] text-[#223544] uppercase'>{itinerary.accommodation?.type}</h1>
+                </div>
                 <h1 className='font-[Montserrat] text-[16px] font-[700] text-[#223544] uppercase'>{itinerary.accommodation?.name}</h1>
                 <p className='font-[Poppins]  max-w-[500px] text-[14px] mt-1 text-[#636774] font-[400] '>{itinerary.accommodation?.address}</p>
             </div>
             <div className="dinning px-5 py-3">
                 <h1 className='font-[Montserrat] text-[16.5px] font-[700] text-[#223544]  uppercase text-center bg-blue-50 py-2 mb-2 leading-loose'>Food and Dinning</h1>
-                <div className='grid grid-cols-3 justify-items-start'>
+                <div className='grid grid-cols-1 sm:grid-cols-3  justify-items-start gap-5 sm:gap-7'>
                     <div>
                         <div className='flex gap-2 items-center mb-2'>
                             <EmojiFoodBeverageIcon sx={{ fontSize: "2rem", color: "#ff6060" }} />
@@ -62,9 +64,9 @@ const TripCards = ({ itinerary }) => {
             </div>
             <div className="dest px-5 py-3">
                 <h1 className='font-[Montserrat] text-[16.5px] font-[700] text-[#223544]  uppercase text-center bg-blue-50 py-2 mb-2 leading-loose'>Places You can visit</h1>
-                <div className='grid grid-cols-3 justify-items-start gap-12'>
+                <div className='grid grid-cols-1 sm:grid-cols-3  sm:justify-items-start gap-5 sm:gap-7'>
                     {
-                        itinerary.placeToVisit.map((place, i) => <div>
+                        itinerary.placeToVisit.map((place, i) => <div key={i}>
                             <div className='flex gap-2 items-center mb-2'>
                                 <FmdGoodIcon sx={{ fontSize: "2rem", color: "#4755c0" }} />
                                 <h1 className='font-[Montserrat] text-[12px] font-[700] text-[#223544] uppercase'>{place?.placeType}</h1>

@@ -91,9 +91,12 @@ class chatgpt(APIView):
         days = (dt.strptime(endDate, "%Y-%m-%d") -
                 dt.strptime(startDate, "%Y-%m-%d")).days
 
-        prompt = f'Generate a personalized travel itinerary for a trip to {places} with a budget of {budget} INR. The traveler is interested in a  {days} days vacation and enjoys {interest}. They are looking for {accomodation} accommodations and prefer {transport} transportation. The itinerary should include  {cuisines} dining options. Please provide a short itinerary with daily recommendations for {days}   days, including suggested destinations, activities, and dining options. The itinerary should be written in {languages}. Note the  dates of trip are from {startDate} to {endDate}.Add daywise accommodations type,place and address.'
-        format = '{tripName:\"\",subTitle:\"\",description:\"\",itinerary:[{date:\"\",Day:\"\",accommodation:{type:\"\",name:\"\",address:\"\",},dining:{breakfast:{dishName:\"\",placeName:\"\",address:\"\"},dinner:{dishName:\"\",placeName:\"\",address:\"\"},lunch:{dishName:\"\",placeName:\"\",address:\"\"},},destination:\"\",description:\"\",placeToVisit:[{placeSpot:\"\",address:\"\",placeType:\"\"}]}]}'
+        # prompt = f'Generate a personalized travel itinerary for a trip to {places} with a budget of {budget} INR. The traveler is interested in a  {days} days vacation and enjoys {interest}. They are looking for {accomodation} accommodations and prefer {transport} transportation. The itinerary should include  {cuisines} dining options. Please provide a short itinerary with daily recommendations for {days}   days, including suggested destinations, activities, and dining options. The itinerary should be written in {languages}. Note the  dates of trip are from {startDate} to {endDate}.Add daywise accommodations type,place and address.'
 
+        # format = '{tripName:\"\",subTitle:\"\",description:\"\",itinerary:[{date:\"\",Day:\"\",accommodation:{type:\"\",name:\"\",address:\"\",},dining:{breakfast:{dishName:\"\",placeName:\"\",address:\"\"},dinner:{dishName:\"\",placeName:\"\",address:\"\"},lunch:{dishName:\"\",placeName:\"\",address:\"\"},},destination:\"\",description:\"\",placeToVisit:[{placeSpot:\"\",address:\"\",placeType:\"\"}]}]}'
+
+        prompt = f'Generate a personalized travel  for {places} from {startDate} to {endDate}  with a  budget of {budget} INR, including {interest}interest,{accomodation} accommodations,{transport} transportation,and {cuisines} dining options.Provide tour plan in {languages} languages. Use less than 3000 tokens'
+        format = "{tripName:,subTitle:,description:,itinerary:[{date:,Day:,accommodation:{type:,name:,address:,},dining:{breakfast:{dishName:,placeName:,address:},dinner:{dishName:,placeName:,address:},lunch:{dishName:,placeName:,address:},},destination:,description:,placeToVisit:[{placeSpot:,address:,placeType:}]}]}"
         body = prompt+format
         # print(body)
         data = {
@@ -102,6 +105,7 @@ class chatgpt(APIView):
         url = f'https://c4-na.altogic.com/e:645a75c1bc487bc47cf0bd50/travel'
         response = requests.post(url, data=data)
         res = response.json()
+        print(res)
         p = res['choices'][0]['message']['content']
         print(p)
         resp = json.loads(p)

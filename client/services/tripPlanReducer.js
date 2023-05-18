@@ -5,7 +5,7 @@ const baseURL = 'http://127.0.0.1:8000/'
 const tripPlan = createSlice({
     name: "tripPlan",
     initialState: {
-        data: null,
+        data: [],
         isLoading: false,
         isError: null,
         isSuccess: null,
@@ -16,7 +16,7 @@ const tripPlan = createSlice({
         },
         fetchDataSuccess(state, action) {
             state.isLoading = false;
-            state.data = state.data ? [...state.data, ...action.payload] : action.payload;
+            state.data = action.payload
             state.isSuccess = true;
             state.isError = null;
         },
