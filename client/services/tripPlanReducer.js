@@ -1,24 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 const baseURL = 'http://127.0.0.1:8000/'
 
-const initialState = {
-    data: null,
-    isLoading: false,
-    isError: null,
-    isSuccess: null,
-};
-
-const mySlice = createSlice({
-    name: 'mySlice',
-    initialState,
+const tripPlan = createSlice({
+    name: "tripPlan",
+    initialState: {
+        data: [],
+        isLoading: false,
+        isError: null,
+        isSuccess: null,
+    },
     reducers: {
         fetchDataStart(state) {
             state.isLoading = true;
         },
         fetchDataSuccess(state, action) {
             state.isLoading = false;
-            state.data = action.payload;
+            state.data = action.payload
             state.isSuccess = true;
             state.isError = null;
         },
@@ -28,19 +26,18 @@ const mySlice = createSlice({
             state.data = null;
             state.isError = action.payload;
         },
-    },
-});
+    }
+})
 
-export const { fetchDataStart, fetchDataSuccess, fetchDataFailure } = mySlice.actions;
-
-export const fetchApiData = (data) => async (dispatch) => {
+const { fetchDataStart, fetchDataSuccess, fetchDataFailure } = tripPlan.actions;
+export const generateTrip = (data) => async (dispatch) => {
     dispatch(fetchDataStart());
     try {
-        const response = await axios.post(`${baseURL}api/get-place-details/`, data);
+        const response = await axios.post(`${baseURL}api/travel/`, data);
         dispatch(fetchDataSuccess(response.data));
     } catch (error) {
         dispatch(fetchDataFailure(error.message));
     }
 };
 
-export default mySlice.reducer;
+export default tripPlan.reducer;

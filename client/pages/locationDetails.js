@@ -13,7 +13,7 @@ const LocationDetails = () => {
         isLoading ? <LoaderExample /> :
           <>
             <h1 className="w-4/5 m-auto mt-36 font-bold text-[40px]">Get a Tour of <span className="text-[#6388ff]"> {place?.hotels?.features[0]?.properties?.county}</span></h1>
-            <Hotels hotelsData={place?.hotels?.features} /> 
+            <Hotels hotelsData={place?.hotels?.features} />
             <ArtHistory tourismData={place?.tourism?.features} />
           </>
       }

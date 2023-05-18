@@ -27,7 +27,7 @@ const Navbar = () => {
                 <div>
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
                         <Link href="/">
-                            <h2 className="text-3xl font-semibold text-white">LOGO</h2>
+                            <h2 className="text-3xl font-semibold text-white">SAFARLY</h2>
                         </Link>
                         <div className="md:hidden">
                             <button
@@ -75,7 +75,7 @@ const Navbar = () => {
                         className={`flex-1 text-lg justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
                             }`}
                     >
-                        <ul className="font-normal text-[1rem] items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
+                        {/* <ul className="font-normal text-[1rem] items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
                             <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/'}>Home</Link>
                             </li>
@@ -85,7 +85,7 @@ const Navbar = () => {
                                 <Link href={'/locationDetails'}>Category</Link></li>
                             <li className="hover:text-[#6388ff] cursor-pointer" >
                                 <Link href={'/'}>Contact Us</Link></li>
-                        </ul>
+                        </ul> */}
 
                         <div className="mt-3 space-y-2 md:hidden sm:inline-block  text-[1rem]">
                             <button
