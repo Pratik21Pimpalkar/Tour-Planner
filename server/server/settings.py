@@ -69,9 +69,7 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'server.wsgi.application'
-
+WSGI_APPLICATION = 'server.wsgi.app'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -134,5 +132,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     ]
 # }
 
-ALLOWED_HOSTS=['*']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
