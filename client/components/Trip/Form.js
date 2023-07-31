@@ -1,115 +1,219 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { cities } from '../LandingPage/cities';
 import { DatePicker, Select } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { generateTrip } from '@/services/tripPlanReducer';
 import { useRouter } from 'next/router';
+import { hotelslist } from './hotels';
+import { fetchAutoCompleteData } from '@/services/autoCompleteReducer';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const Form = () => {
+    const [timeoutId, setTimeoutId] = useState(null);
+    const [suggestions, setSuggestions] = useState([]);
+    const [location, setLocation] = useState({ query: '' });
+    const hotelListOptions = hotelslist.map(hotel => ({
+        label: hotel.Name + " Rs: " + hotel.Price,
+        value: hotel.index,
+    }))
+
     const dispatch = useDispatch();
     const router = useRouter();
     const [tripData, setTripData] = useState({
         places: [],
-        startDate: "",
-        endDate: "",
-        budget: "",
+        // startDate: "",
+        longitude: "",
+        latitude: "",
+        // endDate: "",
+        duration: "",
+        isStay: [],
+        // budget: "",
         interest: [],
-        accomodation: [],
-        transport: [],
-        activities: [],
-        cuisines: [],
-        languages: []
+        selected_sr_no: [],
+        time_in_hotel: "",
+        // transport: [],
+        // activities: [],
+        // cuisines: [],
+        // languages: []
     })
-    const accomodation = [
-        { label: "Hotel", value: "Hotel" },
-        { label: "Boutique Hotel", value: "Boutique Hotel" },
-        { label: "Hostel", value: "Hostel" },
-        { label: "Resort", value: "Resort" },
-        { label: "Vacation Rental", value: "Vacation Rental" },
-        { label: "Camping", value: "Camping" },
-        { label: "Homestay", value: "Homestay" },
-        { label: "Bed and Breakfast", value: "Bed and Breakfast" },
-    ];
+
     const options = [
-        { label: "History", value: "History" },
-        { label: "Culture", value: "Culture" },
-        { label: "Art", value: "Art" },
-        { label: "Food", value: "Food" },
-        { label: "Music", value: "Music" },
-        { label: "Nature", value: "Nature" },
-        { label: "Sports", value: "Sports" },
-        { label: "Photography", value: "Photography" },
-        { label: "Architecture", value: "Architecture" },
-        { label: "Literature", value: "Literature" }
-    ];
-    const transport = [
-        { label: "Airplane", value: "Airplane" },
-        { label: "Train", value: "Train" },
-        { label: "Bus", value: "Bus" },
-        { label: "Car", value: "Car" },
-        { label: "Bicycle", value: "Bicycle" },
-        { label: "Motorcycle", value: "Motorcycle" },
-        { label: "Boat", value: "Boat" },
-        // { label: "Walking", value: "Walking" },
-    ];
-    const cuisines = [
-        { label: "Indian", value: "Indian" },
-        { label: "Italian", value: "Italian" },
-        { label: "Mexican", value: "Mexican" },
-        { label: "Chinese", value: "Chinese" },
-        { label: "Japanese", value: "Japanese" },
-        { label: "Thai", value: "Thai" },
-        { label: "French", value: "French" },
-        { label: "Mediterranean", value: "Mediterranean" },
-    ];
-    const activities = [
+        // { label: "Historical", value: "Historical" },
+        // { label: "Culture", value: "Culture" },
+        // { label: "Art", value: "Art" },
+        // { label: "Food", value: "Food" },
+        // { label: "Music", value: "Music" },
+        // { label: "Nature", value: "Nature" },
+        // { label: "Sports", value: "Sports" },
+        // { label: "Photography", value: "Photography" },
+        // { label: "Architecture", value: "Architecture" },
+        // { label: "Literature", value: "Literature" }
+        { label: "Religious", value: "Religious" },
+        { label: "Wildlife", value: "Wildlife" },
+        { label: "Park", value: "Park" },
+        { label: "Historical", value: "Historical" },
+        { label: "Literature", value: "Literature" },
+        { label: "Fun", value: "Fun" },
+        { label: "Sport", value: "Sport" },
         { label: "Shopping", value: "Shopping" },
-        { label: "Museums", value: "Museums" },
-        { label: "Art Galleries", value: "Art Galleries" },
-        { label: "Historical Sites", value: "Historical Sites" },
-        { label: "Theme Parks", value: "Theme Parks" },
-        { label: "Zoos and Aquariums", value: "Zoos and Aquariums" },
-        { label: "Nightlife", value: "Nightlife" },
-        { label: "Concerts and Shows", value: "Concerts and Shows" },
-        { label: "Sports Events", value: "Sports Events" },
-        { label: "Outdoor Adventures", value: "Outdoor Adventures" },
+        { label: "Restaurant", value: "Restaurant" }
     ];
-    const languages = [
-        { label: "English", value: "English" },
-        { label: "Hindi", value: "Hindi" },
-        { label: "Marathi", value: "Marathi" },
-    ];
+
+
+    const suggestionData = useSelector(state => state.autoComplete.data)
+
+
+    const handleLocationChange = (e) => {
+        // setLocation({ query: e });
+        clearTimeout(timeoutId)
+        if (e.trim() !== "") {
+            dispatch(fetchAutoCompleteData({ query: e }))
+            // dispatch(fetchAutoCompleteData(e.target.value))
+            const newTimeoutId = setTimeout(() => {
+                setSuggestions(
+                    suggestionData?.features?.map((result) => {
+                        return (
+                            {
+                                long: result?.properties?.lon,
+                                name: result?.properties?.name,
+                                lat: result?.properties?.lat,
+                                formatted: result?.properties?.formatted,
+                                state: result?.properties?.state,
+                                country: result?.properties?.country,
+                                county: result?.properties?.county,
+                                place_id: result?.properties?.place_id
+
+                                // fsq_id: result?.place?.fsq_id,
+                                // place: result?.place?.name,
+                                // primary: result?.text?.primary,
+                                // secondary: result?.text?.secondary
+
+                                // address: result?.place?.location.address,
+                                // locality: result?.place?.location.locality,
+                                // region: result?.place?.location.region,
+                                // formattedAddress: result?.place?.location.formatted_address,
+
+
+                            }
+                        )
+                    }
+                    ))
+
+                console.log(typeof (suggestions));
+            }, 500)
+            console.log((suggestions));
+            setTimeoutId(newTimeoutId)
+        }
+    }
+    const handleSelectSuggestion = (place) => {
+        setTripData({ ...tripData, longitude: place.long, latitude: place.lat })
+        // setLocation({ query: place.formatted });
+        // // setPlace_id(place.place_id)
+        // setSuggestions([])
+
+    }
+
+    const [value, setValue] = useState('');
+
+    const onSelect = (data) => {
+        // console.log('onSelect', data);
+    };
+    // console.log(suggestionData);
+    const onChange = (data) => {
+        // console.log(data);
+        if (data.trim() !== "") {
+            dispatch(fetchAutoCompleteData({ query: data }))
+            const newTimeoutId = setTimeout(() => {
+                setSuggestions(suggestionData.map((result) => (
+                    {
+                        longitude: result?.geometry?.coordinates[0],
+                        latitude: result?.geometry?.coordinates[1],
+                        formatted: result?.properties?.formatted,
+                        option: result?.properties?.formatted,
+                        state: result?.properties?.state,
+                        country: result?.properties?.country,
+                        county: result?.properties?.county,
+                        place_id: result?.properties?.place_id
+
+                        // fsq_id: result?.place?.fsq_id,
+                        // place: result?.place?.name,
+                        // primary: result?.text?.primary,
+                        // secondary: result?.text?.secondary
+
+                        // address: result?.place?.location.address,
+                        // locality: result?.place?.location.locality,
+                        // region: result?.place?.location.region,
+                        // formattedAddress: result?.place?.location.formatted_address,
+
+
+                    }
+                ))
+                )
+            }, 500)
+            setTimeoutId(newTimeoutId)
+        }
+        setValue(data);
+
+    };
+    console.log((suggestions));
 
     const submitTripForm = () => {
+        clearTimeout(timeoutId)
         dispatch(generateTrip(tripData))
         router.push('/plantrip/trip')
-
     }
     return (
         <div className='mt-36 px-7 sm:px-2 min-h-[100vh]'>
             <h1 className='capitalize text-center text-[2.25rem] font-bold text-blue-900 my-10 bg-[aliceblue] p-2'  > Plan your Vacations</h1>
             <div className="md:w-[1024px] mx-auto ">
                 <div className='grid sm:grid-cols-3 grid-cols-1 gap-5 mb-5'>
-                    <Select mode="tags" className="py-4 px-4 w-full col-span-2  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500" style={{ width: '100%' }} placeholder="Enter destination" value={tripData.places} onChange={(value) => setTripData({ ...tripData, places: value })} >
-                        {cities.map((city) => {
+                    {/* <Select mode="tags" className="py-4 px-4 w-full col-span-2  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500" style={{ width: '100%' }} placeholder="Enter destination"  onChange={handleLocationChange} >
+                        {suggestions.map((suggestion, index) => {
                             return (
-                                <Option key={city}>{city}</Option>
+                                <Option key={index} onClick={() => handleSelectSuggestion(suggestion)}>{suggestion?.formatted}</Option>
                             )
                         })}
-                    </Select>
-                    <RangePicker disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)} className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
+                    </Select> */}
+                    {/* <AutoComplete
+                        options={suggestions}
+                        style={{
+                            width: 200,
+                        }}
+                        onSelect={onSelect}
+                        // filterOption={(inputValue, option) =>
+                        //     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                        // }
+                        onSearch={(text) => onChange(text)}
+                        placeholder="input here"
+                    /> */}
+                    <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={suggestions ? suggestions.map((s) => s.formatted) : []}
+                        sx={{ width: 300 }}
+                        onInputChange={(e) => onChange(e.target.value)}
+                        renderInput={(params) => <TextField {...params} label="Input" />}
+                    />
+                    {/* <RangePicker disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)} className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         onChange={(v, d) => {
                             setTripData({ ...tripData, startDate: d[0], endDate: d[1] })
-                        }} />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-
-                    <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in ₹)'
-                        onChange={(e) => setTripData({ ...tripData, budget: e.target.value })}
+                        }} /> */}
+                    <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Duration of Trip in Hrs   '
+                        onChange={(e) => setTripData({ ...tripData, duration: e.target.value })}
                         min={10000}
 
                     />
+
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+                    {/* <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in ₹)'
+                        onChange={(e) => setTripData({ ...tripData, budget: e.target.value })}
+                        min={10000}
+
+                    /> */}
 
                     <Select
                         mode="multiple"
@@ -118,20 +222,48 @@ const Form = () => {
                         placeholder="Interest"
                         defaultValue={[]}
                         value={tripData.interest}
-                        onChange={(value) => setTripData({ ...tripData, interest: value.slice(-2) })}
+                        onChange={(value) => setTripData({ ...tripData, interest: value })}
                         options={options}
                     />
+
                     <Select
                         mode="single"
                         allowClear
                         className='py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
+                        placeholder="Want To Stay in Hotel?"
+                        defaultValue={[]}
+
+                        value={tripData.isStay}
+                        onChange={(value) => setTripData({ ...tripData, isStay: value })}
+                        options={
+                            [
+                                { label: "Yes", value: true },
+                                { label: "No", value: false },
+                            ]
+                        }
+                    />
+
+                    <Select
+                        mode="single"
+                        allowClear
+                        className={` ${(tripData.isStay) ? "" : "hidden"} py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500`}
                         placeholder="Accomodation"
                         defaultValue={[]}
+                        // disabled
+                        disabled={!(tripData.isStay)}
                         value={tripData.accomodation}
-                        onChange={(value) => setTripData({ ...tripData, accomodation: value })}
-                        options={accomodation}
+                        onChange={(value) => setTripData({ ...tripData, selected_sr_no: value })}
+                        options={hotelListOptions}
                     />
-                    <Select
+
+
+                    <input type="number" className={`${(tripData.isStay) ? "" : "hidden"} py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500`} placeholder='Time (in hrs) to stay in hotel'
+                        onChange={(e) => setTripData({ ...tripData, time_in_hotel: e.target.value })}
+                        min={10000}
+
+                    />
+
+                    {/* <Select
                         mode="single"
                         allowClear
                         className='py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
@@ -140,7 +272,7 @@ const Form = () => {
                         value={tripData.transport}
                         onChange={(value) => setTripData({ ...tripData, transport: value })}
                         options={transport}
-                    />
+                    /> */}
                     {/* <Select
                         mode="multiple"
                         allowClear
@@ -150,7 +282,7 @@ const Form = () => {
                         onChange={(value) => setTripData({ ...tripData, activities: value })}
                         options={activities}
                     /> */}
-                    <Select
+                    {/* <Select
                         mode="multiple"
                         allowClear
                         className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
@@ -168,10 +300,10 @@ const Form = () => {
                         value={tripData.languages}
                         onChange={(value) => setTripData({ ...tripData, languages: value })}
                         options={languages}
-                    />
+                    /> */}
                 </div>
                 <div className='w-full flex justify-center mt-10'>
-                    {tripData.accomodation.length > 0 && tripData.interest.length > 0 && tripData.languages.length > 0 && tripData.places.length > 0 && tripData.budget.trim() !== ""
+                    {tripData.interest.length > 0
                         ? <><button type="button" className="text-white mx-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={submitTripForm}>Build Your Trip</button> </> :
                         <>
                             <button type="button" className="text-white bg-blue-400 dark:bg-blue-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center" disabled>Build Your Trip</button>

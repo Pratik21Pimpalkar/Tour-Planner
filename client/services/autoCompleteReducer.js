@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const baseURL = 'https://tour-planner-backend.vercel.app/'
+// const baseURL = 'https://tour-planner-backend.vercel.app/'
+const baseURL = 'http://127.0.0.1:8000/'
 
 const autoComplete = createSlice({
     name: "autoComplete",
@@ -30,7 +31,7 @@ const autoComplete = createSlice({
 })
 
 const { fetchDataStart, fetchDataSuccess, fetchDataFailure } = autoComplete.actions;
-export const fetchAutoData = (data) => async (dispatch) => {
+export const fetchAutoCompleteData = (data) => async (dispatch) => {
     dispatch(fetchDataStart());
     try {
         const response = await axios.post(`${baseURL}api/search-place/`, data);

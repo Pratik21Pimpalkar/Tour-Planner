@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const baseURL = 'https://tour-planner-backend.vercel.app/'
-// const baseURL = 'http://127.0.0.1:8000/'
+// const baseURL = 'https://tour-planner-backend.vercel.app/'
+const baseURL = 'http://127.0.0.1:8000/'
 const tripPlan = createSlice({
     name: "tripPlan",
     initialState: {
@@ -33,11 +33,20 @@ const { fetchDataStart, fetchDataSuccess, fetchDataFailure } = tripPlan.actions;
 export const generateTrip = (data) => async (dispatch) => {
     dispatch(fetchDataStart());
     try {
-        const response = await axios.post(`${baseURL}api/travel/`, data);
+        const response = await axios.post(`${baseURL}calculate-tour-plan/`, data);
         dispatch(fetchDataSuccess(response.data));
     } catch (error) {
         dispatch(fetchDataFailure(error.message));
     }
 };
+// export const generateTrip = (data) => async (dispatch) => {
+//     dispatch(fetchDataStart());
+//     try {
+//         const response = await axios.post(`${baseURL}api/travel/`, data);
+//         dispatch(fetchDataSuccess(response.data));
+//     } catch (error) {
+//         dispatch(fetchDataFailure(error.message));
+//     }
+// };
 
 export default tripPlan.reducer;
