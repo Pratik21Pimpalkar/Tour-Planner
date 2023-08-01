@@ -1,6 +1,6 @@
 export const  hotelslist = [
     {
-        "index": 48,
+        "index": 49,
         "Name": "Royal Karhandla Resort, Nagpur Office",
         "Ratings": 4.4111,
         "Time": 12,
@@ -13,7 +13,7 @@ export const  hotelslist = [
         "longitude": 79.10848485815744
     },
     {
-        "index": 49,
+        "index": 50,
         "Name": "Baaz Jungle Resort",
         "Ratings": 4.54465,
         "Time": 12,
@@ -26,7 +26,7 @@ export const  hotelslist = [
         "longitude": 79.07451041191081
     },
     {
-        "index": 58,
+        "index": 59,
         "Name": "Radisson Blu Hotel Nagpur",
         "Ratings": 4.678,
         "Time": 12,
@@ -78,7 +78,7 @@ export const  hotelslist = [
         "longitude": 79.06456584898272
     },
     {
-        "index": 62,
+        "index": 63,
         "Name": "Hotel Centre Point",
         "Ratings": 4.33456,
         "Time": 12,
@@ -117,7 +117,7 @@ export const  hotelslist = [
         "longitude": 79.06515779000814
     },
     {
-        "index": 65,
+        "index": 66,
         "Name": "Hotel Hardeo",
         "Ratings": 4.1686,
         "Time": 12,
@@ -130,7 +130,7 @@ export const  hotelslist = [
         "longitude": 79.08581012653202
     },
     {
-        "index": 66,
+        "index": 67,
         "Name": "Mango Hotels Nagpur",
         "Ratings": 3.457544,
         "Time": 12,
@@ -143,7 +143,7 @@ export const  hotelslist = [
         "longitude": 79.05922942763772
     },
     {
-        "index": 67,
+        "index": 61,
         "Name": "Hotel Tuli International",
         "Ratings": 4.3453,
         "Time": 12,
@@ -156,7 +156,7 @@ export const  hotelslist = [
         "longitude": 79.07311435739851
     },
     {
-        "index": 68,
+        "index": 69,
         "Name": "Paradise Homestay Civil Lines",
         "Ratings": 4.7778,
         "Time": 12,

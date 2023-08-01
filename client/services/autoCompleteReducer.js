@@ -17,7 +17,8 @@ const autoComplete = createSlice({
         },
         fetchDataSuccess(state, action) {
             state.isLoading = false;
-            state.data = state.data ? [...state.data, ...action.payload] : action.payload;
+            state.data = action.payload;
+            // state.data = state.data ? [...state.data, ...action.payload] : action.payload;
             state.isSuccess = true;
             state.isError = null;
         },

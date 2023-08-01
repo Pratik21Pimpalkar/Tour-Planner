@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { cities } from '../LandingPage/cities';
 import { DatePicker, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +32,7 @@ const Form = () => {
         // budget: "",
         interest: [],
         selected_sr_no: [],
-        time_in_hotel: "",
+        time_in_hotel: [],
         // transport: [],
         // activities: [],
         // cuisines: [],
@@ -65,48 +65,6 @@ const Form = () => {
     const suggestionData = useSelector(state => state.autoComplete.data)
 
 
-    const handleLocationChange = (e) => {
-        // setLocation({ query: e });
-        clearTimeout(timeoutId)
-        if (e.trim() !== "") {
-            dispatch(fetchAutoCompleteData({ query: e }))
-            // dispatch(fetchAutoCompleteData(e.target.value))
-            const newTimeoutId = setTimeout(() => {
-                setSuggestions(
-                    suggestionData?.features?.map((result) => {
-                        return (
-                            {
-                                long: result?.properties?.lon,
-                                name: result?.properties?.name,
-                                lat: result?.properties?.lat,
-                                formatted: result?.properties?.formatted,
-                                state: result?.properties?.state,
-                                country: result?.properties?.country,
-                                county: result?.properties?.county,
-                                place_id: result?.properties?.place_id
-
-                                // fsq_id: result?.place?.fsq_id,
-                                // place: result?.place?.name,
-                                // primary: result?.text?.primary,
-                                // secondary: result?.text?.secondary
-
-                                // address: result?.place?.location.address,
-                                // locality: result?.place?.location.locality,
-                                // region: result?.place?.location.region,
-                                // formattedAddress: result?.place?.location.formatted_address,
-
-
-                            }
-                        )
-                    }
-                    ))
-
-                console.log(typeof (suggestions));
-            }, 500)
-            console.log((suggestions));
-            setTimeoutId(newTimeoutId)
-        }
-    }
     const handleSelectSuggestion = (place) => {
         setTripData({ ...tripData, longitude: place.long, latitude: place.lat })
         // setLocation({ query: place.formatted });
@@ -115,14 +73,13 @@ const Form = () => {
 
     }
 
-    const [value, setValue] = useState('');
 
     const onSelect = (data) => {
         // console.log('onSelect', data);
     };
     // console.log(suggestionData);
-    const onChange = (data) => {
-        // console.log(data);
+    const handleLocationChange = (data) => {
+        console.log(data);
         if (data.trim() !== "") {
             dispatch(fetchAutoCompleteData({ query: data }))
             const newTimeoutId = setTimeout(() => {
@@ -154,10 +111,13 @@ const Form = () => {
             }, 500)
             setTimeoutId(newTimeoutId)
         }
-        setValue(data);
 
     };
-    console.log((suggestions));
+
+    useEffect(() => {
+        handleLocationChange(location.query);
+    }, [location.query])
+
 
     const submitTripForm = () => {
         clearTimeout(timeoutId)
@@ -191,17 +151,27 @@ const Form = () => {
                     <Autocomplete
                         disablePortal
                         id="combo-box-demo"
-                        options={suggestions ? suggestions.map((s) => s.formatted) : []}
+                        filterOptions={(x) => x}
+                        isOptionEqualToValue={(option, value) => {
+                            console.log(option);
+                            console.log(value);
+                            // setTripData({ ...tripData, longitude: value.longitude, latitude: value.latitude })
+                            return option.place_id === value.place_id
+                        }}
+                        options={suggestions}
+                        getOptionLabel={(option) => option.formatted}
                         sx={{ width: 300 }}
-                        onInputChange={(e) => onChange(e.target.value)}
-                        renderInput={(params) => <TextField {...params} label="Input" />}
+                        onInputChange={(e, value) => setLocation({ query: value })}
+                        onChange={(e, value) => setTripData({ ...tripData, longitude: value.longitude, latitude: value.latitude })
+                        }
+                        renderInput={(params) => <TextField {...params} label="Current Location" />}
                     />
                     {/* <RangePicker disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)} className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
                         onChange={(v, d) => {
                             setTripData({ ...tripData, startDate: d[0], endDate: d[1] })
                         }} /> */}
                     <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Duration of Trip in Hrs   '
-                        onChange={(e) => setTripData({ ...tripData, duration: e.target.value })}
+                        onChange={(e) => setTripData({ ...tripData, duration: parseInt(e.target.value) })}
                         min={10000}
 
                     />
@@ -258,8 +228,7 @@ const Form = () => {
 
 
                     <input type="number" className={`${(tripData.isStay) ? "" : "hidden"} py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500`} placeholder='Time (in hrs) to stay in hotel'
-                        onChange={(e) => setTripData({ ...tripData, time_in_hotel: e.target.value })}
-                        min={10000}
+                        onChange={(e) => setTripData({ ...tripData, time_in_hotel: parseInt(e.target.value) })}
 
                     />
 

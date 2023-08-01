@@ -6,6 +6,7 @@ from math import radians, sin, cos, sqrt, atan2
 import math
 import pandas as pd
 import requests
+import numpy as np
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from datetime import datetime as dt
@@ -122,8 +123,7 @@ class chatgpt(APIView):
 data = pd.read_csv('./data.csv')
 data[['latitude', 'longitude']] = data['Latitude , Longitude'].str.split(
     ',', expand=True).astype(float)
-
-
+data['Price'] = data['Price'].replace(np.nan, None)
 def calculate_distance(coord1, coord2):
     # Calculate the distance between the coordinates using geodesic distance
     distance = geodesic(coord1, coord2).kilometers
@@ -319,22 +319,13 @@ def select_nearby_hotels_with_unique_number(current_location, data, hotel_prefer
 class calculate_tour_plan_view(APIView):
     def post(self, request):
         print(request.data)
-        url = "https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi"
-        querystring = {"address":request.data['places'][0]}
-        headers = {
-	        "X-RapidAPI-Key": "42b67b5881mshff37a6b04fccdf5p1165e2jsn9561d39a3576",
-	        "X-RapidAPI-Host": "address-from-to-latitude-longitude.p.rapidapi.com"
-        }
-
-        response = requests.get(url, headers=headers, params=querystring)
-        print(response)
         latitude = request.data['latitude']
         longitude = request.data['longitude']
-        tour_time = request.data['duration']
+        tour_time = float(request.data['duration'])
         hotel_preference = bool(request.data['isStay'])
         place_types = request.data['interest']
         selected_sr_no = request.data['selected_sr_no']
-        time_in_hotel = request.data['time_in_hotel']
+        time_in_hotel = float(request.data['time_in_hotel'])
         current_location = (latitude, longitude)
 
         # Call the necessary functions with user input
@@ -355,13 +346,15 @@ class calculate_tour_plan_view(APIView):
     # Return the response as JSON
         return JsonResponse(response_data)
 
+
 d1 = pd.read_csv('./data.csv')
 d1[['latitude', 'longitude']] = data['Latitude , Longitude'].str.split(
     ',', expand=True).astype(float)
 
+
 class list_of_hotels(APIView):
-    def get(self,request):
+    def get(self, request):
         hotels_data = d1[d1['PlaceType'] == 'Hotels']
         hotels_data_with_index = hotels_data.reset_index()
         hotels_json = hotels_data_with_index.to_dict(orient='records')
-        return JsonResponse(hotels_json,safe=False)
+        return JsonResponse(hotels_json, safe=False)
