@@ -32,6 +32,7 @@ class autoCompletePlaceSearch(APIView):
         data2 = data['features']
         return JsonResponse(data2, safe=False)
 
+
 class getPlaceDetails(APIView):
     def post(self, request):
         place_id = request.data['place_id']
@@ -96,11 +97,12 @@ class chatgpt(APIView):
         return JsonResponse(resp, safe=False)
 
 
-
 data = pd.read_csv('./data.csv')
 data[['latitude', 'longitude']] = data['Latitude , Longitude'].str.split(
     ',', expand=True).astype(float)
 data['Price'] = data['Price'].replace(np.nan, None)
+
+
 def calculate_distance(coord1, coord2):
     # Calculate the distance between the coordinates using geodesic distance
     distance = geodesic(coord1, coord2).kilometers
@@ -138,7 +140,7 @@ def create_tour_plan(current_location, tour_time, place_types):
 
     # Calculate the time to reach each place based on average speed
     nearby_places['time_to_reach'] = nearby_places['distance'] / \
-        15  # Assuming average speed of 10 km/hr
+        20  # Assuming average speed of 20 km/hr
 
     # Calculate the total time required for each place
     nearby_places['total_time'] = nearby_places['time_to_reach'] + \
@@ -188,12 +190,13 @@ def create_tour_plan(current_location, tour_time, place_types):
     # Return the optimal tour plan as JSON
     return tour_plan_json
 
+
 def select_nearby_hotels_with_unique_number(current_location, data, hotel_preference, tour_time, selected_sr_no, time_in_hotel):
     if not hotel_preference:
         return None
 
-    # Filter the dataset for hotels
-    hotels = data[data['PlaceType'] == 'Hotels'].copy()
+    # Filter the dataset for hotels with the PlaceType 'Hotels' and 'Restaurant'
+    hotels = data[(data['PlaceType'] == 'Hotels')].copy()
 
     if hotels.empty:
         return None
@@ -228,6 +231,7 @@ def select_nearby_hotels_with_unique_number(current_location, data, hotel_prefer
     current_location = (
         selected_hotel['latitude'], selected_hotel['longitude'])
 
+    # print(selected_hotel, current_location, tour_time)
     return selected_hotel, current_location, tour_time
 
 
@@ -241,9 +245,9 @@ class calculate_tour_plan_view(APIView):
         place_types = request.data['interest']
         selected_sr_no = request.data['selected_sr_no']
         if (hotel_preference == True):
-             time_in_hotel = float(request.data['time_in_hotel'])
-        else: 
-            time_in_hotel=0
+            time_in_hotel = float(request.data['time_in_hotel'])
+        else:
+            time_in_hotel = 0
 
         current_location = (latitude, longitude)
 
@@ -253,16 +257,32 @@ class calculate_tour_plan_view(APIView):
         optimal_tour_plan = create_tour_plan(
             current_location, tour_time, place_types)
 
-        # print(hotel_info)
-        # print(optimal_tour_plan)
+        print(hotel_info)
+      # print(optimal_tour_plan)
+        if hotel_info is not None and hotel_info  :
+                hotelLatitude = hotel_info[0]['latitude']
+                hotelLongitude = hotel_info[0]['longitude']
+                hotelLoc=(hotelLatitude,hotelLongitude)
+                starting_distance = calculate_distance(current_location,hotelLoc)
+                print(starting_distance)
+                hotel_data = {
+                    'Name': hotel_info[0][0],
+                    'Ratings': hotel_info[0]['Ratings'],
+                    'Price': hotel_info[0]['Price'],
+                    'total_time': starting_distance/(20)+ time_in_hotel,
+                    'time_to_reach': starting_distance/(20),
+                    'Latitude': hotel_info[0]['latitude'],
+                    'Longitude': hotel_info[0]['longitude'],
+                    'PlaceType': hotel_info[0]['PlaceType'],
+                    'Distance': hotel_info[0]['distance'],
+                    'City': hotel_info[0]['City']
+                }
+                optimal_tour_plan.insert(0, hotel_data)
     # Prepare the response data
         response_data = {
-            'hotel': 'hotel',
-            # 'hotel_info': hotel_info,
             'optimal_tour_plan': optimal_tour_plan
         }
-
-    # Return the response as JSON
+        # Return the response as JSON
         return JsonResponse(response_data)
 
 

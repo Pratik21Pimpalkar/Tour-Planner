@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { cities } from '../LandingPage/cities';
-import { DatePicker, Select } from 'antd';
+// import { DatePicker, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -8,8 +8,8 @@ import { generateTrip } from '@/services/tripPlanReducer';
 import { useRouter } from 'next/router';
 import { hotelslist } from './hotels';
 import { fetchAutoCompleteData } from '@/services/autoCompleteReducer';
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
+
 const Form = () => {
     const [timeoutId, setTimeoutId] = useState(null);
     const [suggestions, setSuggestions] = useState([]);
@@ -28,7 +28,7 @@ const Form = () => {
         latitude: "",
         // endDate: "",
         duration: "",
-        isStay: [],
+        isStay: false,
         // budget: "",
         interest: [],
         selected_sr_no: [],
@@ -63,20 +63,8 @@ const Form = () => {
 
 
     const suggestionData = useSelector(state => state.autoComplete.data)
+    const { isSuccess } = useSelector(state => state.tripPlan)
 
-
-    const handleSelectSuggestion = (place) => {
-        setTripData({ ...tripData, longitude: place.long, latitude: place.lat })
-        // setLocation({ query: place.formatted });
-        // // setPlace_id(place.place_id)
-        // setSuggestions([])
-
-    }
-
-
-    const onSelect = (data) => {
-        // console.log('onSelect', data);
-    };
     // console.log(suggestionData);
     const handleLocationChange = (data) => {
         console.log(data);
@@ -122,154 +110,138 @@ const Form = () => {
     const submitTripForm = () => {
         clearTimeout(timeoutId)
         dispatch(generateTrip(tripData))
-        router.push('/plantrip/trip')
+        if (!isSuccess)
+            setOpen(true)
+        if (isSuccess === true)
+            router.push('/plantrip/trip')
     }
+    const [isEnabled, setIsEnabled] = useState(false);
+
+
+    useEffect(() => {
+        // Function to fetch the user's geolocation
+        const fetchUserGeolocation = () => {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        setTripData({ ...tripData, longitude, latitude })
+                    },
+                    (error) => {
+                        console.error('Error getting user geolocation:', error.message);
+                    }
+                );
+            } else {
+                console.error('Geolocation is not available in this browser.');
+            }
+        };
+
+        // Call the function to fetch user's geolocation when the checkbox is checked
+        if (isEnabled) {
+            fetchUserGeolocation();
+        }
+    }, [isEnabled])
+    const [open, setOpen] = React.useState(false);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
     return (
         <div className='mt-36 px-7 sm:px-2 min-h-[100vh]'>
             <h1 className='capitalize text-center text-[2.25rem] font-bold text-blue-900 my-10 bg-[aliceblue] p-2'  > Plan your Vacations</h1>
             <div className="md:w-[1024px] mx-auto ">
                 <div className='grid sm:grid-cols-3 grid-cols-1 gap-5 mb-5'>
-                    {/* <Select mode="tags" className="py-4 px-4 w-full col-span-2  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500" style={{ width: '100%' }} placeholder="Enter destination"  onChange={handleLocationChange} >
-                        {suggestions.map((suggestion, index) => {
-                            return (
-                                <Option key={index} onClick={() => handleSelectSuggestion(suggestion)}>{suggestion?.formatted}</Option>
-                            )
-                        })}
-                    </Select> */}
-                    {/* <AutoComplete
-                        options={suggestions}
-                        style={{
-                            width: 200,
-                        }}
-                        onSelect={onSelect}
-                        // filterOption={(inputValue, option) =>
-                        //     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                        // }
-                        onSearch={(text) => onChange(text)}
-                        placeholder="input here"
-                    /> */}
-                    <Autocomplete
-                        disablePortal
-                        id="combo-box-demo"
-                        filterOptions={(x) => x}
-                        isOptionEqualToValue={(option, value) => {
-                            console.log(option);
-                            console.log(value);
-                            // setTripData({ ...tripData, longitude: value.longitude, latitude: value.latitude })
-                            return option.place_id === value.place_id
-                        }}
-                        options={suggestions}
-                        getOptionLabel={(option) => option.formatted}
-                        sx={{ width: 300 }}
-                        onInputChange={(e, value) => setLocation({ query: value })}
-                        onChange={(e, value) => setTripData({ ...tripData, longitude: value.longitude, latitude: value.latitude })
-                        }
-                        renderInput={(params) => <TextField {...params} label="Current Location" />}
-                    />
-                    {/* <RangePicker disabledDate={(current) => current && current < new Date().setHours(0, 0, 0, 0)} className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        onChange={(v, d) => {
-                            setTripData({ ...tripData, startDate: d[0], endDate: d[1] })
-                        }} /> */}
-                    <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Duration of Trip in Hrs   '
+                    <div>
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            disabled={isEnabled}
+                            filterOptions={(x) => x}
+                            isOptionEqualToValue={(option, value) => {
+                                return option.place_id === value.place_id
+                            }}
+                            options={suggestions}
+                            getOptionLabel={(option) => option.formatted}
+                            onInputChange={(e, value) => setLocation({ query: value })}
+                            onChange={(e, value) => setTripData({ ...tripData, longitude: value?.longitude, latitude: value?.latitude })
+                            }
+                            renderInput={(params) => <TextField {...params} label="Enter  Current Location Manually" />}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={isEnabled}  onChange={(e) => setIsEnabled(e.target.checked)} />}
+                            label="Automatcally Detect Your Location"
+                            
+                        />
+                    </div>
+                    <TextField
+                        type="number"
+                        label='Trip Duration (in hrs)'
                         onChange={(e) => setTripData({ ...tripData, duration: parseInt(e.target.value) })}
-                        min={10000}
-
+                        inputProps={{ min: 10000 }}
                     />
 
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-
-                    {/* <input type="number" className='py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500' placeholder='Budget (in ₹)'
-                        onChange={(e) => setTripData({ ...tripData, budget: e.target.value })}
-                        min={10000}
-
-                    /> */}
-
-                    <Select
-                        mode="multiple"
-                        allowClear
-                        className='py-4 px-4 w-full   min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        placeholder="Interest"
-                        defaultValue={[]}
-                        value={tripData.interest}
-                        onChange={(value) => setTripData({ ...tripData, interest: value })}
-                        options={options}
-                    />
-
-                    <Select
-                        mode="single"
-                        allowClear
-                        className='py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        placeholder="Want To Stay in Hotel?"
-                        defaultValue={[]}
-
-                        value={tripData.isStay}
-                        onChange={(value) => setTripData({ ...tripData, isStay: value })}
-                        options={
-                            [
-                                { label: "Yes", value: true },
-                                { label: "No", value: false },
-                            ]
-                        }
-                    />
-
-                    <Select
-                        mode="single"
-                        allowClear
-                        className={` ${(tripData.isStay) ? "" : "hidden"} py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500`}
-                        placeholder="Accomodation"
-                        defaultValue={[]}
-                        // disabled
-                        disabled={!(tripData.isStay)}
-                        value={tripData.accomodation}
-                        onChange={(value) => setTripData({ ...tripData, selected_sr_no: value })}
-                        options={hotelListOptions}
-                    />
+                    <FormControl variant="outlined">
+                        <InputLabel>Interest</InputLabel>
+                        <Select
+                            multiple
+                            value={tripData.interest}
+                            onChange={(e) => setTripData({ ...tripData, interest: e.target.value })}
+                            label="Interest"
+                        >
+                            {options.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl variant="outlined" >
+                        <InputLabel>Want To Stay in Hotel?</InputLabel>
+                        <Select
+                            value={tripData.isStay}
+                            onChange={(e) => setTripData({ ...tripData, isStay: e.target.value })}
+                            label="Want To Stay in Hotel?"
+                        >
+                            <MenuItem value={true}>Yes</MenuItem>
+                            <MenuItem value={false}>No</MenuItem>
+                        </Select>
+                    </FormControl>
 
 
-                    <input type="number" className={`${(tripData.isStay) ? "" : "hidden"} py-4 px-4 w-full  min-w-[10rem] rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-[200] text-[14px] focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500`} placeholder='Time (in hrs) to stay in hotel'
-                        onChange={(e) => setTripData({ ...tripData, time_in_hotel: parseInt(e.target.value) })}
+                    {tripData.isStay && (
+                        <FormControl variant="outlined" >
+                            <InputLabel>Accommodation</InputLabel>
+                            <Select
+                                value={tripData.selected_sr_no}
+                                onChange={(e) => setTripData({ ...tripData, selected_sr_no: e.target.value })}
+                                label="Accommodation"
+                            >
+                                {hotelListOptions.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
 
-                    />
 
-                    {/* <Select
-                        mode="single"
-                        allowClear
-                        className='py-4 px-4 w-full  min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        placeholder="Transport"
-                        defaultValue={[]}
-                        value={tripData.transport}
-                        onChange={(value) => setTripData({ ...tripData, transport: value })}
-                        options={transport}
-                    /> */}
-                    {/* <Select
-                        mode="multiple"
-                        allowClear
-                        className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        placeholder="Activities you like to have"
-                        defaultValue={[]}
-                        onChange={(value) => setTripData({ ...tripData, activities: value })}
-                        options={activities}
-                    /> */}
-                    {/* <Select
-                        mode="multiple"
-                        allowClear
-                        className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        placeholder="Cuisine"
-                        defaultValue={[]} value={tripData.cuisines}
-                        onChange={(value) => setTripData({ ...tripData, cuisines: value.slice(-2) })}
-                        options={cuisines}
-                    />
-                    <Select
-                        mode="single"
-                        allowClear
-                        className='py-4 px-4 w-full   min-w-[10rem]  rounded shadow bg-slate-100 border-[#4096ff] focus:border-[1px] font-thin focus:outline-none focus:shadow-lg focus:shadow-slate-300 duration-100 shadow-gray-300 placeholder:text-gray-500'
-                        placeholder="Language of Plan"
-                        defaultValue={[]}
-                        value={tripData.languages}
-                        onChange={(value) => setTripData({ ...tripData, languages: value })}
-                        options={languages}
-                    /> */}
+                    {tripData.isStay && (
+                        <>
+
+                            <TextField
+                                type="number"
+                                label='Time (in hrs) to stay in hotel'
+
+                                onChange={(e) => setTripData({ ...tripData, time_in_hotel: parseInt(e.target.value) })}
+                            />
+
+                        </>
+                    )}
                 </div>
                 <div className='w-full flex justify-center mt-10'>
                     {tripData.interest.length > 0
@@ -280,6 +252,12 @@ const Form = () => {
                         </>
                     }
                 </div>
+                <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+                    <Alert severity="error" sx={{ width: '100%' }}>
+                        Please try to add more interest field or increase trip duration.
+                    </Alert>
+                </Snackbar>
             </div>
 
         </div >
