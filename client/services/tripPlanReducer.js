@@ -2,13 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 const baseURL = 'https://tour-planner-backend.vercel.app/'
 // const baseURL = 'http://127.0.0.1:8000/'
+
+const addUniqueIdsToData = (data) => {
+    return data.map((item, index) => ({ ...item, id: index }));
+};
 const tripPlan = createSlice({
     name: "tripPlan",
     initialState: {
         data: [],
         isLoading: false,
         isError: null,
-        isSuccess: null,
+        isSuccess: false,
     },
     reducers: {
         fetchDataStart(state) {
@@ -16,7 +20,7 @@ const tripPlan = createSlice({
         },
         fetchDataSuccess(state, action) {
             state.isLoading = false;
-            state.data = action.payload
+            state.data = addUniqueIdsToData(action.payload.optimal_tour_plan)
             state.isSuccess = true;
             state.isError = null;
         },
@@ -33,11 +37,20 @@ const { fetchDataStart, fetchDataSuccess, fetchDataFailure } = tripPlan.actions;
 export const generateTrip = (data) => async (dispatch) => {
     dispatch(fetchDataStart());
     try {
-        const response = await axios.post(`${baseURL}api/travel/`, data);
+        const response = await axios.post(`${baseURL}calculate-tour-plan/`, data);
         dispatch(fetchDataSuccess(response.data));
     } catch (error) {
         dispatch(fetchDataFailure(error.message));
     }
 };
+// export const generateTrip = (data) => async (dispatch) => {
+//     dispatch(fetchDataStart());
+//     try {
+//         const response = await axios.post(`${baseURL}api/travel/`, data);
+//         dispatch(fetchDataSuccess(response.data));
+//     } catch (error) {
+//         dispatch(fetchDataFailure(error.message));
+//     }
+// };
 
 export default tripPlan.reducer;

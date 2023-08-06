@@ -87,22 +87,22 @@ const Navbar = () => {
                                 <Link href={'/'}>Contact Us</Link></li>
                         </ul> */}
 
-                        <div className="mt-3 space-y-2 md:hidden sm:inline-block  text-[1rem]">
+                        {/* <div className="mt-3 space-y-2 md:hidden sm:inline-block  text-[1rem]">
                             <button
                                 className="px-4 py-3  text-white bg-transparent border-white border-[1px] max-w-full rounded-md shadow hover:bg-white hover:text-gray-900 "
                             >
                                 Sign in / Register
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
-                <div className="hidden space-x-2 md:inline-block text-[1rem]">
+                {/* <div className="hidden space-x-2 md:inline-block text-[1rem]">
                     <button
                         className="px-4 py-3  text-white bg-transparent border-white border-[1px] max-w-full rounded-md shadow hover:bg-white hover:text-gray-900 "
                     >
                         Sign in / Register
                     </button>
-                </div>
+                </div> */}
             </div>
 
         </nav>

@@ -1,8 +1,10 @@
+
 import Form from '@/components/Trip/Form'
 const TripForm = () => {
     return (
         <>
             <Form />
+            {/* <LeafletMap/> */}
         </>
     )
 }
