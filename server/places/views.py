@@ -32,26 +32,6 @@ class autoCompletePlaceSearch(APIView):
         data2 = data['features']
         return JsonResponse(data2, safe=False)
 
-
-# class getPlaceDetails(APIView):
-#     def post(self, request):
-#         data = request.data['fsq_id']
-#         # data['format'] = 'json'
-#         print(data)
-#         # text = data['text']
-#         # url = f'https://api.geoapify.com/v1/geocode/autocomplete?text={text}'
-#         url = 'https://api.foursquare.com/v3/places/'
-#         url = f'https://api.foursquare.com/v3/places/{data}'
-#         # authorization = 'baaeb048d8054097a42022f81ad1c1df'
-#         authorization = 'fsq3BY/UrNb8Phx24byC4MtTjNLfJe0DTNus5Q5Kaayptys='
-#         headers = {
-#             'Authorization': authorization,
-#             "accept": "application/json",
-#         }
-#         response = requests.get(url, headers=headers)
-#         data = response.json()
-#         return JsonResponse(data, safe=False)
-
 class getPlaceDetails(APIView):
     def post(self, request):
         place_id = request.data['place_id']
@@ -99,10 +79,6 @@ class chatgpt(APIView):
         days = (dt.strptime(endDate, "%Y-%m-%d") -
                 dt.strptime(startDate, "%Y-%m-%d")).days
 
-        # prompt = f'Generate a personalized travel itinerary for a trip to {places} with a budget of {budget} INR. The traveler is interested in a  {days} days vacation and enjoys {interest}. They are looking for {accomodation} accommodations and prefer {transport} transportation. The itinerary should include  {cuisines} dining options. Please provide a short itinerary with daily recommendations for {days}   days, including suggested destinations, activities, and dining options. The itinerary should be written in {languages}. Note the  dates of trip are from {startDate} to {endDate}.Add daywise accommodations type,place and address.'
-
-        # format = '{tripName:\"\",subTitle:\"\",description:\"\",itinerary:[{date:\"\",Day:\"\",accommodation:{type:\"\",name:\"\",address:\"\",},dining:{breakfast:{dishName:\"\",placeName:\"\",address:\"\"},dinner:{dishName:\"\",placeName:\"\",address:\"\"},lunch:{dishName:\"\",placeName:\"\",address:\"\"},},destination:\"\",description:\"\",placeToVisit:[{placeSpot:\"\",address:\"\",placeType:\"\"}]}]}'
-
         prompt = f'Generate a personalized travel  for {places} from {startDate} to {endDate}  with a  budget of {budget} INR, including {interest}interest,{accomodation} accommodations,{transport} transportation,and {cuisines} dining options.Provide tour plan in {languages} languages. Use less than 3000 tokens'
         format = "{tripName:,subTitle:,description:,itinerary:[{date:,Day:,accommodation:{type:,name:,address:,},dining:{breakfast:{dishName:,placeName:,address:},dinner:{dishName:,placeName:,address:},lunch:{dishName:,placeName:,address:},},destination:,description:,placeToVisit:[{placeSpot:,address:,placeType:}]}]}"
         body = prompt+format
@@ -118,6 +94,7 @@ class chatgpt(APIView):
         print(p)
         resp = json.loads(p)
         return JsonResponse(resp, safe=False)
+
 
 
 data = pd.read_csv('./data.csv')
@@ -211,68 +188,6 @@ def create_tour_plan(current_location, tour_time, place_types):
     # Return the optimal tour plan as JSON
     return tour_plan_json
 
-
-# def select_nearby_hotels_with_unique_number(current_location, data, hotel_preference, tour_time):
-#     if not hotel_preference:
-#         return None
-
-#     # Filter the dataset for hotels
-#     hotels = data[data['PlaceType'] == 'Hotels'].copy()
-
-#     if hotels.empty:
-#         return None
-
-#     # Calculate the distance to each hotel from the current location
-#     hotels['distance'] = hotels.apply(lambda row: calculate_distance(
-#         current_location, (row['latitude'], row['longitude'])), axis=1)
-
-#     # Find the nearest hotel
-#     hotels['distance'] = hotels['distance'].astype(float)
-#     nearest_hotel = hotels.loc[hotels['distance'].idxmin()]
-
-#     # Sort the hotels based on distance
-#     hotels = hotels.sort_values('distance')
-
-#     # Print the names and ratings of hotels with unique numbers
-#     for idx, hotel in hotels.iterrows():
-#         print(
-#             f"{idx + 1}. {hotel['Name']} \n (Rating: {hotel['Ratings']}) \n cost:{hotel['Price']}")
-
-#     # Prompt the user to select a hotel by serial number
-#     while True:
-#         try:
-#             selected_sr_no = int(
-#                 input("Enter the serial number of the hotel you want to select (0 to exit): "))
-#             if selected_sr_no == 0:
-#                 return None
-#             selected_hotel = hotels.loc[selected_sr_no - 1]
-#             print("Chosen hotel:", selected_hotel['Name'],
-#                   "(Rating:", selected_hotel['Ratings'], ")")
-#             break
-#         except (ValueError, IndexError):
-#             print("Invalid input. Please enter a valid serial number.")
-
-#     # Ask the user for the time to spend in the hotel
-#     while True:
-#         try:
-#             time_in_hotel = float(
-#                 input("Enter the time to spend in the hotel (in hours): "))
-#             break
-#         except ValueError:
-#             print("Invalid input. Please enter a valid time in hours.")
-
-#     selected_hotel['Time'] = time_in_hotel
-
-#     # Reduce the tour time by subtracting the time spent in the hotel
-#     tour_time -= time_in_hotel
-
-#     # Update the current location to the coordinates of the selected hotel
-#     current_location = (
-#         selected_hotel['latitude'], selected_hotel['longitude'])
-
-#     return selected_hotel, current_location, tour_time
-
-
 def select_nearby_hotels_with_unique_number(current_location, data, hotel_preference, tour_time, selected_sr_no, time_in_hotel):
     if not hotel_preference:
         return None
@@ -325,7 +240,11 @@ class calculate_tour_plan_view(APIView):
         hotel_preference = bool(request.data['isStay'])
         place_types = request.data['interest']
         selected_sr_no = request.data['selected_sr_no']
-        time_in_hotel = float(request.data['time_in_hotel'])
+        if (hotel_preference == True):
+             time_in_hotel = float(request.data['time_in_hotel'])
+        else: 
+            time_in_hotel=0
+
         current_location = (latitude, longitude)
 
         # Call the necessary functions with user input
