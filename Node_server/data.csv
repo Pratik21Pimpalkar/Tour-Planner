@@ -1,0 +1,75 @@
+id,name,ratings,spendtime,distance,city,interest,lat,lng
+1,Deeksha Bhoomi,4.51,1,4.7,Nagpur,Religious,21.12815606,79.06696546
+2,Umred Karhandla Wildlife Sanctuary,4.12,6,56,Nagpur,Wildlife,20.8508114,79.4181413
+3,Ambazari Lake & Garden,4.2435,2,7.5,Nagpur,Park,21.13457682,79.04428722
+4,Futala Lake,4.1,2,6,Nagpur,Park,21.15432915,79.04321718
+5,Pench Tiger Reserve,4.2,6,78,Nagpur,Wildlife,21.64358991,79.23186255
+6,Gorewada Lake,4.45,3,9.3,Nagpur,Park,21.19887522,79.03723764
+7,Vidarbha Cricket Association Ground,4.1,3,2.4,Nagpur,Sport,21.16030245,79.07318761
+8,Nagzira Wildlife Sanctuary,4.24,8,128,Nagpur,Wildlife,21.24832967,79.98653695
+9,Shri Ganesh Temple Tekdi,4.999,1,1,Nagpur,Religious,21.148311,79.08688367
+10,Ramtek Fort,4.55,6,49,Nagpur,Historical,21.40143452,79.33208434
+11,Krazy Castle Aqua Park,4.11,7,4.4,Nagpur,Fun,21.12907901,79.04594384
+12,Khindsi Lake,4.33,6,50,Nagpur,Park,21.41679018,79.36128064
+13,Raman Science Centre,3.84,4,1.4,Nagpur,Literature,21.14606088,79.09411547
+14,Swaminarayan Temple,4.62,2,7.1,Nagpur,Religious,21.13957674,79.14591086
+15,Fun N Food Village,5,6,37,Nagpur,Fun,21.13867475,78.7552809
+16,Kasturchand Park,4.57,1,1.9,Nagpur,Park,21.15471332,79.08160346
+17,Zero Mile Marker,4.47,1,1.8,Nagpur,Historical,21.14987276,79.08074515
+18,Dragon Palace Buddhist Temple,4.51,2,17,Nagpur,Religious,21.21014208,79.20317104
+19,Telankhedi Shiv Temple,4.58,2,3.7,Nagpur,Religious,21.15730824,79.04895341
+20,Empress City Mall,3.89,4,0.7,Nagpur,Shopping,21.14822119,79.09289508
+21,Ram Dham,4.444,5,41,Nagpur,Religious,21.39046594,79.25898063
+22,Balaji Temple,4.77,1,12,Nagpur,Religious,21.20331762,79.17544841
+23,Sonegaon Lake,3.56,1,7.9,Nagpur,Park,21.10057876,79.05214093
+24,Japanese Rose Garden,4.277,1,4.4,Nagpur,Park,21.16266035,79.06566116
+25,Gandhi Sagar Lake,3.534,1,1.1,Nagpur,Park,21.14726487,79.09868002
+26,Sitabuldi Fort,4.3545,1,2.4,Nagpur,Historical,21.14853337,79.08448495
+27,The Seminary Hill,4.3113,2,5.3,Nagpur,Historical,21.16663308,79.05499926
+28,Maharaj Baug & Zoo,3.8676,4,2.5,Nagpur,Wildlife,21.14404561,79.07402064
+29,Narrow Gauge Rail Museum,4.3454,3,1.8,Nagpur,Literature,21.16703274,79.08975271
+30,Koradi Temple,4.743,3,15,Nagpur,Religious,21.25861363,79.09742445
+31,Mankapur Indoor Stadium,4.478,2,5.7,Nagpur,Sport,21.18309469,79.077221
+32,"Haldiram’s, Nagpur",4.467,1,2,Nagpur,Restaurant,21.13764928,79.06033354
+33,"Gayatri Bhojnalaya, Nagpur",4.311,1,4.2,Nagpur,Restaurant,21.13643485,79.06467792
+34,"Naivedhyam, Nagpur",4.223,1,2.1,Nagpur,Restaurant,21.14131259,79.08060168
+35,"Dalchini Curries-n-More, Nagpur",4.343,1,2.7,Nagpur,Restaurant,21.13413903,79.0828094
+36,RCOEM Canteen,3.8787,2,6.2,Nagpur,Restaurant,21.17830462,79.06164669
+37,Bouffage Cafe And Bistro,4.322,2,4.7,Nagpur,Restaurant,21.13447991,79.058166
+38,Nourrir Cafe,4.48,2,4,Nagpur,Restaurant,21.14146907,79.06419057
+39,Hideout The Base-meant For Coffee,4.89,2,5,Nagpur,Restaurant,21.13748974,79.06295476
+40,Café Illusions,4.223,2,4.1,Nagpur,Restaurant,21.13781106,79.06500744
+41,Bala's Café,4.33,2,3.7,Nagpur,Restaurant,21.17076523,79.07862366
+42,Fortune Mall,3.678,4,1.9,Nagpur,Shopping,21.14117989,79.08212478
+43,Reliance Centro,3,3,3.6,Nagpur,Shopping,21.13793254,79.06874649
+44,Eternity Mall,4.134,4,2.5,Nagpur,Shopping,21.14358653,79.08015086
+45,VR Mall,4.4565,4,3.3,Nagpur,Shopping,21.13370246,79.09682352
+46,DMart Hingna Nagpur,3.999,3,16,Nagpur,Shopping,21.08821876,78.96965551
+47,D-Mart Nagpur,4.334,3,11,Nagpur,Shopping,21.08885942,78.97085714
+48,Glocal Square Mall,4.47834,12,1.9,Nagpur,Shopping,21.1431208,79.08226132
+49,"Royal Karhandla Resort, Nagpur Office",4.4111,12,2.3,Nagpur,Hotels,21.15230488,79.10848486
+50,Baaz Jungle Resort,4.54465,12,89,Nagpur,Hotels,21.14827206,79.07451041
+51,Cafe Hide n' seek,4.5645,12,3.4,Nagpur,Restaurant,21.16853812,79.07870949
+52,Sewagram,4.53476,6,76,Nagpur,Historical,20.74814645,78.65971381
+53,Lata Mangeshkar Garden,4.112121,2,7,Nagpur,Park,21.15537465,79.14650704
+54,Saibaba Temple,4.11123,2,4.7,Nagpur,Religious,21.15978309,79.1231491
+55,Ramjhula Bridge,4.4444,1,2.1,Nagpur,Historical,21.15364253,79.08936968
+56,"Seven Sisters Hill, Perjagadh",4.6343,9,105,Nagpur,Historical,20.53093616,79.57499242
+57,WaghVille waterpark and Resorts ,3.86755,6,43,Nagpur,Fun,21.08161658,78.76692224
+58,Kunwara Bhivsen,4.6793,6,52,Nagpur,Religious,21.49978831,79.16767579
+59,Radisson Blu Hotel Nagpur,4.678,12,6.2,Nagpur,Hotels,21.10684914,79.06960147
+60,Le Méridien Nagpur,4.32345,12,14,Nagpur,Hotels,21.04643465,79.05582831
+61,Tuli Imperial,4.3243,12,3.6,Nagpur,Hotels,21.13467351,79.07313713
+62,The Pride Hotel Nagpur,4.787,12,8.4,Nagpur,Hotels,21.08973617,79.06456585
+63,Hotel Centre Point,4.33456,12,3.9,Nagpur,Hotels,21.13541728,79.07647633
+64,The Majestic Manor,3.97856,12,8.5,Nagpur,Hotels,21.09371099,79.06461638
+65,Hotel Airport Centre Point,4.25767,12,9.3,Nagpur,Hotels,21.09681998,79.06515779
+66,Hotel Hardeo,4.1686,12,1.6,Nagpur,Hotels,21.14139221,79.08581013
+67,Mango Hotels Nagpur,3.457544,12,5,Nagpur,Hotels,21.14645893,79.05922943
+68,Hotel Tuli International,4.3453,12,2.6,Nagpur,Hotels,21.13450071,79.07311436
+69,Paradise Homestay Civil Lines,4.7778,12,3.6,Nagpur,Hotels,21.15380852,79.06752275
+70,Ambakhori  Waterfall,3.84667,2,35,Nagpur,Fun,17.99711575,76.07359158
+71,Waki Woods Forest,4.174,4,30,Nagpur,Wildlife,21.37453586,79.03452037
+72,Tadoba National Park,3.873,9,142,Nagpur,Wildlife,20.31911738,79.37821627
+73,Kanha Tiger Reserve,4.5842,14,241,Nagpur,Wildlife,22.37527062,80.60438704
+74,Dhapewada Lake,3.7245,2,23,Nagpur,Park,21.23852812,78.9171683

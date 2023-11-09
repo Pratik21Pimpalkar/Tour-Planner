@@ -22,7 +22,7 @@ class autoCompletePlaceSearch(APIView):
         url = f'https://api.geoapify.com/v1/geocode/autocomplete?text={text}'
         # url = 'https://api.foursquare.com/v3/places/search'
         # url = 'https://api.foursquare.com/v3/autocomplete'
-        authorization = 'baaeb048d8054097a42022f81ad1c1df'
+        authorization = '6ad67642e2f94ad99d6fc359677c6706'
         # authorization = 'fsq3BY/UrNb8Phx24byC4MtTjNLfJe0DTNus5Q5Kaayptys='
         headers = {
             'Authorization': authorization

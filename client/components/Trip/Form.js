@@ -63,7 +63,7 @@ const Form = () => {
 
 
     const suggestionData = useSelector(state => state.autoComplete.data)
-    const { isSuccess } = useSelector(state => state.tripPlan)
+    const { isSuccess,isLoading } = useSelector(state => state.tripPlan)
 
     // console.log(suggestionData);
     const handleLocationChange = (data) => {
@@ -71,7 +71,7 @@ const Form = () => {
         if (data.trim() !== "") {
             dispatch(fetchAutoCompleteData({ query: data }))
             const newTimeoutId = setTimeout(() => {
-                setSuggestions(suggestionData.map((result) => (
+                suggestionData ? setSuggestions(suggestionData.map((result) => (
                     {
                         longitude: result?.geometry?.coordinates[0],
                         latitude: result?.geometry?.coordinates[1],
@@ -95,11 +95,10 @@ const Form = () => {
 
                     }
                 ))
-                )
+                ) : setSuggestions([])
             }, 500)
             setTimeoutId(newTimeoutId)
         }
-
     };
 
     useEffect(() => {
@@ -110,7 +109,7 @@ const Form = () => {
     const submitTripForm = () => {
         clearTimeout(timeoutId)
         dispatch(generateTrip(tripData))
-        if (!isSuccess)
+        if (!isSuccess && !isLoading)
             setOpen(true)
         if (isSuccess === true)
             router.push('/plantrip/trip')
@@ -172,9 +171,9 @@ const Form = () => {
                             renderInput={(params) => <TextField {...params} label="Enter  Current Location Manually" />}
                         />
                         <FormControlLabel
-                            control={<Checkbox checked={isEnabled}  onChange={(e) => setIsEnabled(e.target.checked)} />}
-                            label="Automatcally Detect Your Location"
-                            
+                            control={<Checkbox checked={isEnabled} onChange={(e) => setIsEnabled(e.target.checked)} />}
+                            label="Detect Your Location"
+
                         />
                     </div>
                     <TextField

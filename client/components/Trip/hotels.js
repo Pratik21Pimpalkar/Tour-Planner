@@ -39,7 +39,7 @@ export const  hotelslist = [
         "longitude": 79.06960146886645
     },
     {
-        "index": 59,
+        "index": 60,
         "Name": "Le Méridien Nagpur",
         "Ratings": 4.32345,
         "Time": 12,
@@ -52,7 +52,7 @@ export const  hotelslist = [
         "longitude": 79.05582830685275
     },
     {
-        "index": 60,
+        "index": 61,
         "Name": "Tuli Imperial",
         "Ratings": 4.3243,
         "Time": 12,
@@ -65,7 +65,7 @@ export const  hotelslist = [
         "longitude": 79.07313712879406
     },
     {
-        "index": 61,
+        "index": 62,
         "Name": "The Pride Hotel Nagpur",
         "Ratings": 4.787,
         "Time": 12,
@@ -91,7 +91,7 @@ export const  hotelslist = [
         "longitude": 79.07647632963416
     },
     {
-        "index": 63,
+        "index": 64,
         "Name": "The Majestic Manor",
         "Ratings": 3.97856,
         "Time": 12,
@@ -104,7 +104,7 @@ export const  hotelslist = [
         "longitude": 79.06461638312435
     },
     {
-        "index": 64,
+        "index": 65,
         "Name": "Hotel Airport Centre Point",
         "Ratings": 4.25767,
         "Time": 12,
@@ -143,7 +143,7 @@ export const  hotelslist = [
         "longitude": 79.05922942763772
     },
     {
-        "index": 61,
+        "index": 68,
         "Name": "Hotel Tuli International",
         "Ratings": 4.3453,
         "Time": 12,
