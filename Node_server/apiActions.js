@@ -5,8 +5,8 @@ class Graph {
     constructor() {
         this.nodes = new Map();
     }
-    addNode(id, lat, lng, ratings, interest, spendtime) {
-        this.nodes.set(id, { id, lat, lng, ratings, interest, spendtime, neighbors: new Map() });
+    addNode(id, lat, lng, ratings, interest, spendtime, name) {
+        this.nodes.set(id, { id, lat, lng, ratings, interest, spendtime, name, neighbors: new Map() });
     }
     addEdge(node1, node2) {
         const distance = calculateDistance(this.nodes.get(node1), this.nodes.get(node2));
@@ -18,6 +18,7 @@ class Graph {
 function degToRad(degrees) {
     return degrees * (Math.PI / 180);
 }
+
 function calculateDistance(node1, node2) {
     const R = 6371;
     const dLat = degToRad(node2.lat - node1.lat);
@@ -37,8 +38,8 @@ function readNodesFromCSV(filePath) {
             .on('data', (row) => {
                 csvData.push(row);
                 // Assuming your CSV has 'id', 'lat', and 'lng' columns
-                const { id, lat, lng, ratings, interest, spendtime } = row;
-                graph.addNode(id, parseFloat(lat), parseFloat(lng), parseFloat(ratings), interest, parseFloat(spendtime));
+                const { id, lat, lng, ratings, interest, spendtime, name } = row;
+                graph.addNode(id, parseFloat(lat), parseFloat(lng), parseFloat(ratings), interest, parseFloat(spendtime), name);
             })
             .on('end', () => {
                 resolve(graph);
@@ -49,111 +50,70 @@ function readNodesFromCSV(filePath) {
     });
 }
 
-
-
 const getPlace = async (req, res) => {
+    console.log(req.body);
+    const currLocLng = req.body.longitude
+    const currLocLat = req.body.latitude
+    const userInterests = req.body.interest
+    const noOfDays = 2
+    const maxDistancePerDay = 30
     const filePath = './data.csv';
-    const startingNodeId = 3;
-    const numberOfNodes = 10;
     try {
         const graph = await readNodesFromCSV(filePath);
-        // Add edges to the graph based on distances between nodes
-        graph.nodes.forEach((node1) => {
-            graph.nodes.forEach((node2) => {
-                if (node1 !== node2) {
-                    graph.addEdge(node1.id, node2.id);
-                }
-            });
+
+        // Find the nearest node to the current location
+        let nearestNodeId = null;
+        let nearestDistance = Infinity;
+
+        graph.nodes.forEach((node) => {
+            const distance = calculateDistance(
+                { lat: currLocLat, lng: currLocLng },
+                { lat: node.lat, lng: node.lng }
+            );
+
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestNodeId = node.id;
+            }
         });
-        // console.log(graph);
-        graph.nodes.forEach(n => {
-            const neighborsArray = Array.from(n.neighbors.entries());
-            // Sort the array based on the values
-            neighborsArray.sort((a, b) => a[1] - b[1]);
-            n.neighbors.clear();
-
-            // Set the sorted entries to the original map
-            neighborsArray.forEach(([key, value]) => {
-                n.neighbors.set(key, value);
+        // Add edges to the graph based on distances between nodes
+        if (nearestNodeId) {
+            graph.nodes.forEach((node1) => {
+                graph.nodes.forEach((node2) => {
+                    if (node1 !== node2) {
+                        graph.addEdge(node1.id, node2.id);
+                    }
+                });
             });
 
-        })
-        // const numberOfDays = 3; // Set the desired number of days
-        // const userInterests = ['religious', 'wildlife', 'park', 'literature', 'fun', 'shopping']; // Set user interests
-        // const dayWiseTour = createDayWiseTour(graph, startingNodeId, numberOfDays, userInterests);
+            graph.nodes.forEach(n => {
+                const neighborsArray = Array.from(n.neighbors.entries());
+                // Sort the array based on the values
+                neighborsArray.sort((a, b) => a[1] - b[1]);
+                n.neighbors.clear();
 
-        // console.log(dayWiseTour);
+                // Set the sorted entries to the original map
+                neighborsArray.forEach(([key, value]) => {
+                    n.neighbors.set(key, value);
+                });
 
-        // Find the best route starting from the specified node
-        const userInterests = [""]
-        const bestRoute = findBestRoute(graph, startingNodeId, numberOfNodes, userInterests);
+            })
 
-        const tour = bestRoute.map((id) => graph.nodes.get(id));
-        // const tour = bestRoute.map((id) => csvData.find((i) => i.id === id));
-        res.json({ bestRoute: tour });
+            // graph.nodes.forEach((node) => {
+            //     console.log(`Node ${node.id} Neighbors:`, Array.from(node.neighbors.entries()));
+            // });
+
+            // Find the best route starting from the specified node
+            const tour = createDayWiseTourWithDistanceAndNoRepeat(graph, nearestNodeId, noOfDays, userInterests, maxDistancePerDay)
+            res.json({ bestRoute: tour });
+        } else {
+            res.status(404).json({ error: 'No suitable starting node found near the current location' });
+        }
     } catch (error) {
         console.error('Error reading CSV file:', error);
         res.status(500).json({ error: 'Error reading CSV file' });
     }
 }
-
-// function findBestRoute(graph, startingNodeId, numberOfNodes) {
-//     const visited = new Set();
-//     const route = [startingNodeId + ''];
-//     visited.add(startingNodeId + '')
-//     let currentNodeId = startingNodeId;
-
-//     while (route.length < numberOfNodes) {
-//         visited.add(currentNodeId);
-//         const currentNode = graph.nodes.get(currentNodeId + '');
-
-//         if (!currentNode || !currentNode.neighbors) {
-//             // Break the loop if the current node or its neighbors are undefined
-//             break;
-//         }
-
-//         const neighbors = Array.from(currentNode.neighbors.entries());
-
-//         // Sort neighbors by distance and rating
-//         neighbors.sort((a, b) => {
-//             const distanceA = a[1];
-//             const distanceB = b[1];
-//             const ratingsA = graph.nodes.get(a[0]).ratings || 0;
-//             const ratingsB = graph.nodes.get(b[0]).ratings || 0;
-
-//             // Define weights for ratings and distance
-//             const ratingsWeight = 0.6; // Adjust based on your priorities
-//             const distanceWeight = 0.4; // Adjust based on your priorities
-
-//             // Calculate cost function
-//             const costA = ratingsWeight * ratingsA - distanceWeight * distanceA;
-//             const costB = ratingsWeight * ratingsB - distanceWeight * distanceB;
-
-//             return costB - costA;
-//         });
-//         // Find the next unvisited node to visit
-//         let nextNode = null;
-//         for (const [neighborId, _] of neighbors) {
-//             if (!visited.has(neighborId)) {
-//                 nextNode = neighborId;
-//                 break;
-//             }
-//         }
-
-//         // If no unvisited neighbors, break the loop
-//         if (!nextNode) {
-//             break;
-//         }
-
-//         // Update current node and add to route
-//         currentNodeId = nextNode;
-//         route.push(currentNodeId);
-//     }
-
-//     return route;
-// }
-
-// ...
 
 function findBestRoute(graph, startingNodeId, numberOfNodes, userInterests) {
     const visited = new Set();
@@ -236,24 +196,115 @@ function interestsMatch(placeInterest, userInterests) {
     return userInterests.some(userInterest => placeInterest.includes(userInterest));
 }
 
-function createDayWiseTour(graph, startingNodeId, numberOfDays, userInterests) {
+function createDayWiseTourWithDistanceAndNoRepeat(graph, startingNodeId, numberOfDays = 1, userInterests, maxDistancePerDay) {
     const dayWiseTour = [];
 
+    const visitedPlaces = new Set();
     for (let day = 1; day <= numberOfDays; day++) {
-        const dailyTour = findBestRoute(graph, startingNodeId, 6, userInterests);
-        dayWiseTour.push({ day, places: dailyTour });
+        const dailyTourIds = findBestRouteWithDistanceAndNoRepeat(graph, startingNodeId, 6, userInterests, maxDistancePerDay, visitedPlaces);
+        const dailyTour = dailyTourIds.map(placeId => graph.nodes.get(placeId));
+        const totalDistance = calculateTotalDistance(graph, dailyTour);
+
+        dayWiseTour.push({ day, totalDistance, places: dailyTour });
+
 
         // Update starting node for the next day
         if (dailyTour.length > 0) {
-            startingNodeId = dailyTour[dailyTour.length - 1];
+            startingNodeId = dailyTour[dailyTour.length - 1].id;
         } else {
             // If no places are visited, break the loop
             break;
         }
     }
-
+    console.log(visitedPlaces);
     return dayWiseTour;
 }
+
+function calculateTotalDistance(graph, tour) {
+    let totalDistance = 0;
+
+    for (let i = 0; i < tour.length - 1; i++) {
+        const node1 = graph.nodes.get(tour[i].id);
+        const node2 = graph.nodes.get(tour[i + 1].id);
+
+        if (node1 && node2 && node1.neighbors.has(node2.id)) {
+            totalDistance += node1.neighbors.get(node2.id);
+        }
+    }
+
+    return totalDistance;
+}
+
+function findBestRouteWithDistanceAndNoRepeat(graph, startingNodeId, numberOfNodes, userInterests, maxDistancePerDay, visitedPlaces) {
+    // const visited = new Set();
+    const route = [startingNodeId + ''];
+    // visited.add(startingNodeId + '');
+    visitedPlaces.add(startingNodeId + ''); // Mark the starting node as visited for the current day
+    let currentNodeId = startingNodeId;
+    let totalDistance = 0;
+
+    while (route.length < numberOfNodes && totalDistance <= maxDistancePerDay) {
+        visitedPlaces.add(currentNodeId);
+        const currentNode = graph.nodes.get(currentNodeId + '');
+
+        if (!currentNode || !currentNode.neighbors) {
+            // Break the loop if the current node or its neighbors are undefined
+            break;
+        }
+
+        const neighbors = Array.from(currentNode.neighbors.entries());
+
+        // Sort neighbors by a cost function that considers ratings, distance, and interests
+        neighbors.sort((a, b) => {
+            const distanceA = a[1];
+            const distanceB = b[1];
+            const ratingsA = graph.nodes.get(a[0]).ratings || 0;
+            const ratingsB = graph.nodes.get(b[0]).ratings || 0;
+            const interestA = graph.nodes.get(a[0]).interest || '';
+            const interestB = graph.nodes.get(b[0]).interest || '';
+
+            // Define weights for ratings, distance, and interests
+            const ratingsWeight = 0.5;
+            const distanceWeight = 0.3;
+            const interestWeight = 0.2;
+
+            // Calculate cost function
+            const costA = ratingsWeight * ratingsA - distanceWeight * distanceA + calculateInterestScore(interestA, userInterests) * interestWeight;
+            const costB = ratingsWeight * ratingsB - distanceWeight * distanceB + calculateInterestScore(interestB, userInterests) * interestWeight;
+
+            return costB - costA; // Higher cost (better balance) first
+        });
+
+        // Find the next unvisited node to visit
+        let nextNode = null;
+        for (const [neighborId, distance] of neighbors) {
+            const neighborInterest = graph.nodes.get(neighborId).interest || '';
+            if (!visitedPlaces.has(neighborId) && interestsMatch(neighborInterest, userInterests) && totalDistance + distance <= maxDistancePerDay) {
+                nextNode = neighborId;
+                totalDistance += distance;
+                visitedPlaces.add(neighborId); // Mark the neighbor as visited for the current day
+                break;
+            }
+        }
+
+        // If no unvisited neighbors with matching interests or within distance limit, break the loop
+        if (!nextNode) {
+            break;
+        }
+
+        // Update current node and add to route
+        currentNodeId = nextNode;
+        route.push(currentNodeId);
+    }
+
+    // Reset visited places for the next day
+
+    return route;
+}
+
+
+
+
 
 
 
