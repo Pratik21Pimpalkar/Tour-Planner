@@ -60,9 +60,9 @@ const Map = () => {
                                     ],
                                 })
 
-                            // console.log(routes)
+                            console.log(routes)
                             const routeCoordinates = routes.routes[0].legs[0].points.map(point => {
-                                return [point.lon, point.lat];
+                                return [point.lng, point.lat];
                             })
                             console.log(routeCoordinates);
 
@@ -88,12 +88,12 @@ const Map = () => {
                                 },
                                 paint: {
                                     'line-color': color[index % 40],
-                                    'line-width': 5,
+                                    'line-width': 2,
                                 },
                             });
                         }
                     });
-                    const center = new tt.LngLat(tourData.data.tourPlan[0].lon, tourData.data.tourPlan[0].lat);
+                    const center = new tt.LngLat(tourData?.data?.tourPlan[0]?.lon, tourData?.data?.tourPlan[0]?.lat);
                     map.setCenter(center)
                 })
                 setMap(map); setMapInitialized(true);
