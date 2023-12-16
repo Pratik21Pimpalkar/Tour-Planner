@@ -45,69 +45,57 @@ function buildSortedGraph(data) {
             return acc;
         }, {});
     });
-    // console.dir(graph["Stable temple (krishna gujarati temple)"]);
     return graph;
 }
 
-const userInterests = [
-    "accomodation",
-    "commercial",
-    "catering",
-    "entertainment",
-    "national_park",
-    "beach",
-    "tourism",
-    "building.tourism",
-    "religion",
-    "sport",
-];
 
-// Function to check if a node has any of the specified interests
-function hasInterest(node, interests) {
-    return node.categories.some(category => interests.includes(category));
-}
-
-function generateOptimalTour(data, startingPointLat, startingPointLon, interests) {
+function generateOptimalTour(data, startingPointLat, startingPointLon, maxDistancePerDay) {
     const sortedGraph = buildSortedGraph(data);
     const tourPlan = [];
     const visitedNodes = new Set();
 
+    // Find the nearest node to the starting point
+    let minDistance = Infinity;
     let currentNode = null;
 
-    // Find the nearest node to the starting point that matches the user interests
-    let minDistance = Infinity;
     for (const nodeName in sortedGraph) {
         const node = sortedGraph[nodeName];
-        if (hasInterest(node.data, interests)) {
-            const distance = calculateDistance(
-                startingPointLat,
-                startingPointLon,
-                node.data.lat,
-                node.data.lon
-            );
-            if (distance < minDistance) {
-                minDistance = distance;
-                currentNode = node;
-            }
+        const distance = calculateDistance(
+            startingPointLat,
+            startingPointLon,
+            node.data.lat,
+            node.data.lon
+        );
+        if (distance < minDistance) {
+            minDistance = distance;
+            currentNode = node;
         }
     }
 
-    while (currentNode) {
+    while (currentNode && tourPlan.length < 12 && minDistance <= maxDistancePerDay) {
         const { data } = currentNode;
-        tourPlan.push({ ...data, edges: undefined });
+
+        // Calculate distance only if there's a previous node in the tour
+        if (tourPlan.length > 0) {
+            const previousNode = tourPlan[tourPlan.length - 1];
+            minDistance = calculateDistance(
+                previousNode.lat,
+                previousNode.lon,
+                data.lat,
+                data.lon
+            );
+        }
+
+        tourPlan.push({ ...data, edges: undefined, distance: minDistance });
         visitedNodes.add(currentNode.data.name);
 
+        // Find the nearest unvisited neighbor
         let nextNode = null;
         let minEdgeDistance = Infinity;
 
-        // Find the nearest unvisited neighbor that matches the user interests
         for (const neighborName in currentNode.edges) {
             const neighbor = currentNode.edges[neighborName];
-            if (
-                !visitedNodes.has(neighbor.data.name) &&
-                neighbor.distance < minEdgeDistance &&
-                hasInterest(neighbor.data, interests)
-            ) {
+            if (!visitedNodes.has(neighbor.data.name) && neighbor.distance < minEdgeDistance) {
                 minEdgeDistance = neighbor.distance;
                 nextNode = sortedGraph[neighbor.data.name];
             }
@@ -116,7 +104,7 @@ function generateOptimalTour(data, startingPointLat, startingPointLon, interests
         currentNode = nextNode;
     }
 
-    return tourPlan;
+    return { tourPlan, totalDistance: minDistance };
 }
 
 const placeType = {
@@ -132,16 +120,16 @@ const placeType = {
 
 const generateTourAPI = async (req, res) => {
     try {
-
+        console.log(req.body);
         let lng = req.body.lng
         let lat = req.body.lat
-        let categoriesList = req.body.categoriesList;
+        let categoriesList = req.body.interest;
         const apiUrl = 'https://api.geoapify.com/v2/places';
         let categories = categoriesList.map(category => category).join(',');
         console.log(categories);
-        let filter = `circle:${lng},${lat},500000`;
+        let filter = `circle:${lng},${lat},300000`;
         // let bias = `proximity:${lng},${lat}`;
-        let limit = 10;
+        let limit = 30;
         let apiKey = '6ad67642e2f94ad99d6fc359677c6706';
         let params = {
             categories,
@@ -154,18 +142,21 @@ const generateTourAPI = async (req, res) => {
         };
         const { data } = await axios.get(apiUrl, { params, headers })
         const extractedData = extractPropertiesForList(data.features, propertiesToExtract)
+        console.log(extractedData);
         // return res.json(extractedData)
         const startingPointLat = req.body.lat;
         const startingPointLon = req.body.lng;
-        const maxDistancePerDay = req.body.maxDistancePerDay;
-        const interests = categories
-        const tourPlan = generateOptimalTour(extractedData, startingPointLat, startingPointLon, interests, maxDistancePerDay);
-        console.log("Optimal Tour Plan:", tourPlan);
-        return res.json(tourPlan)
-
+        const maxDistancePerDay = 10;
+        // const interests = ["administrative.district_level"]
+        // const interests = ["religion",
+        //     "beach",
+        //     "tourism",]
+        const tourPlan = generateOptimalTour(extractedData, startingPointLat, startingPointLon, maxDistancePerDay);
+        // console.log("Optimal Tour Plan:", tourPlan);
+        return res.status(200).json(tourPlan)
     } catch (error) {
-        // console.log(error);
-        return res.json({ message: "true" })
+        console.log(error);
+        return res.status(400).json({ message: "true" })
     }
 }
 

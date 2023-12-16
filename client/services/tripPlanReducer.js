@@ -3,9 +3,7 @@ import axios from "axios";
 // const baseURL = 'https://tour-planner-backend.vercel.app/'
 const baseURL = 'http://127.0.0.1:8000/'
 
-const addUniqueIdsToData = (data) => {
-    return data.map((item, index) => ({ ...item, id: index }));
-};
+
 const tripPlan = createSlice({
     name: "tripPlan",
     initialState: {
@@ -20,7 +18,7 @@ const tripPlan = createSlice({
         },
         fetchDataSuccess(state, action) {
             state.isLoading = false;
-            state.data = addUniqueIdsToData(action.payload.optimal_tour_plan)
+            state.data = action.payload
             state.isSuccess = true;
             state.isError = null;
         },

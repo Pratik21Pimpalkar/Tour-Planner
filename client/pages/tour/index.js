@@ -1,34 +1,18 @@
 // "use client"
 
+import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import { markerData } from "./constants";
 // import * as tt from "@tomtom-international/web-sdk-maps";
 
 const Map = () => {
+    const tourData = useSelector(state => state.tripPlan)
     const MAX_ZOOM = 27;
     const mapElement = useRef();
-    const [mapLongitude, setMapLongitude] = useState( 79.06169371534256);
-    const [mapLatitude, setMapLatitude] = useState(  21.17697597847198);
-    const [mapZoom, setMapZoom] = useState(13);
     const [map, setMap] = useState({});
     const [mapInitialized, setMapInitialized] = useState(false);
-    const increaseZoom = () => {
-        if (mapZoom < MAX_ZOOM) {
-            setMapZoom(mapZoom + 1);
-        }
-    };
 
-    const decreaseZoom = () => {
-        if (mapZoom > 1) {
-            setMapZoom(mapZoom - 1);
-        }
-    };
-
-    const updateMap = () => {
-        map.setCenter([parseFloat(mapLongitude), parseFloat(mapLatitude)]);
-        map.setZoom(mapZoom);
-    };
     useEffect(() => {
         const initTT = async () => {
             try {
@@ -38,15 +22,15 @@ const Map = () => {
                 let map = tt.map({
                     key: 'mYu59YkyE6SjkvR1ABG179pVhTRvVBc6',
                     container: mapElement.current,
-                    center: [mapLongitude, mapLatitude],
-                    zoom: mapZoom,
+                    center: [79.06169371534256, 21.17697597847198],
+                    zoom: 10,
                 });
                 map.on('load', () => {
                     map.addControl(new tt.GeolocateControl());
                     map.addControl(new tt.FullscreenControl());
                     map.addControl(new tt.NavigationControl());
                     map.addControl(new tt.ScaleControl());
-                    markerData.forEach(async (marker, index) => {
+                    tourData.data && tourData.data?.tourPlan?.length > 0 && tourData.data?.tourPlan?.forEach(async (marker, index) => {
                         const color = [
                             "#FF5733", "#FFC300", "#4CAF50", "#3498DB", "#9B59B6",
                             "#E74C3C", "#2ECC71", "#3498DB", "#F39C12", "#E74C3C",
@@ -58,7 +42,7 @@ const Map = () => {
                             "#00BFFF", "#FF8C00", "#48D1CC", "#800080", "#FF4500"
                         ];
                         const markerElement = new tt.Marker({ color: color[index % 40] })
-                            .setLngLat([marker.lng, marker.lat])
+                            .setLngLat([marker.lon, marker.lat])
                             .addTo(map);
 
                         const popup = new tt.Popup({ offset: 30, className: 'custom-popup' })
@@ -66,20 +50,19 @@ const Map = () => {
                         markerElement.setPopup(popup);
 
                         // Add route to next marker (if not the last marker)
-                        if (index < markerData.length - 1) {
+                        if (index < tourData.data.tourPlan.length - 1) {
                             const routes = await ts.services
                                 .calculateRoute({
                                     key: 'mYu59YkyE6SjkvR1ABG179pVhTRvVBc6',
                                     locations: [
-                                        { lat: marker.lat, lon: marker.lng },
-                                        { lat: markerData[index + 1].lat, lon: markerData[index + 1].lng }
+                                        { lat: marker.lat, lon: marker.lon },
+                                        { lat: tourData.data.tourPlan[index + 1].lat, lon: tourData.data.tourPlan[index + 1].lon }
                                     ],
                                 })
 
                             // console.log(routes)
                             const routeCoordinates = routes.routes[0].legs[0].points.map(point => {
-                                // console.log(point)
-                                return [point.lng, point.lat];
+                                return [point.lon, point.lat];
                             })
                             console.log(routeCoordinates);
 
@@ -110,6 +93,8 @@ const Map = () => {
                             });
                         }
                     });
+                    const center = new tt.LngLat(tourData.data.tourPlan[0].lon, tourData.data.tourPlan[0].lat);
+                    map.setCenter(center)
                 })
                 setMap(map); setMapInitialized(true);
                 return () => map.remove();
@@ -134,8 +119,28 @@ const Map = () => {
     }, [mapInitialized]);
 
     return (
-        <div className="h-[800px] w-[1000px] flex justify-center">
-            <div ref={mapElement} className="mapDiv w-full h-full" />
+        <div className="p-4 ">
+            <div className="h-[25rem] w-4/5 mx-auto">
+                <div ref={mapElement} className="mapDiv w-full h-full" />
+            </div>
+
+            <div>
+                <p className="text-center my-2 text-2xl font-bold text-slate-800">Place You Can Visit</p>
+                <p className="text-center mb-10 text-sm font-bold text-slate-800">Cost effective plan in this order</p>
+            </div>
+            <div className="grid grid-cols-4     gap-3">
+                {
+                    tourData.data && tourData.data?.tourPlan?.map((data, index) => (
+                        <div className="p-3 bg-slate-300 w-full rounded-md shadow-xl">
+                            <p className="text-lg font-medium uppercase text-gray-700 my-2 ">{index + 1}{"."} {data.name}</p>
+                            <p className="text-sm font-normal italic">{data.formatted}</p>
+                            <p className="flex flex-wrap gap-2 mt-2">{data.categories.map((s) => {
+                                return <span className="text-xs p-2 bg-slate-500 rounded-sm text-white">{s}</span>
+                            })}</p>
+                        </div>
+                    ))
+                }
+            </div>
         </div>
     )
 }
