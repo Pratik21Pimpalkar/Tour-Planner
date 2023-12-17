@@ -7,7 +7,7 @@ const baseURL = 'http://127.0.0.1:8000/'
 const tripPlan = createSlice({
     name: "tripPlan",
     initialState: {
-        data: [],
+        data: undefined,
         isLoading: false,
         isError: null,
         isSuccess: false,

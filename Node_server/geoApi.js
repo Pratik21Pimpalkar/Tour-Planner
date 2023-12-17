@@ -104,7 +104,7 @@ function generateOptimalTour(data, startingPointLat, startingPointLon, maxDistan
         currentNode = nextNode;
     }
 
-    return { tourPlan, totalDistance: minDistance };
+    return { tourPlan, startingPoint: { lat: startingPointLat, lon: startingPointLon }, totalDistance: minDistance };
 }
 
 const placeType = {
@@ -142,7 +142,7 @@ const generateTourAPI = async (req, res) => {
         };
         const { data } = await axios.get(apiUrl, { params, headers })
         const extractedData = extractPropertiesForList(data.features, propertiesToExtract)
-        console.log(extractedData);
+        // console.log(extractedData);
         // return res.json(extractedData)
         const startingPointLat = req.body.lat;
         const startingPointLon = req.body.lng;

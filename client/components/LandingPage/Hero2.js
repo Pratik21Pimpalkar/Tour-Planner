@@ -33,7 +33,7 @@ const Hero2 = () => {
                         </div>
                         {/* <SearchBar /> */}
                         <div className="flex w-full justify-center">
-                            <Link href={'plantrip'} className="flex w-full justify-center">
+                            <Link href={'tourform'} className="flex w-full justify-center">
                                 <button type="button" className="text-blue-50 bg-[#3b79c9]  hover:bg-blue-900 font-bold rounded-lg md-text-lg text-sm px-4 sm:px-5 py-4  sm:py-5 text-center mx-auto w-full lg:w-2/4 uppercase">Plan Your Holidays !</button>
                             </Link>
                         </div>

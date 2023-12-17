@@ -1,9 +1,7 @@
-// "use client"
-
+"use client"
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
-import { markerData } from "./constants";
 // import * as tt from "@tomtom-international/web-sdk-maps";
 
 const Map = () => {
@@ -25,11 +23,20 @@ const Map = () => {
                     center: [79.06169371534256, 21.17697597847198],
                     zoom: 10,
                 });
+
                 map.on('load', () => {
                     map.addControl(new tt.GeolocateControl());
                     map.addControl(new tt.FullscreenControl());
                     map.addControl(new tt.NavigationControl());
                     map.addControl(new tt.ScaleControl());
+                    let yourMarkedLocation = new tt.Marker({ draggable: false, color: "#000" })
+                        .setLngLat([tourData?.data?.startingPoint?.lon, tourData?.data?.startingPoint?.lat])
+                        .addTo(map);
+                    let userLocationPopup = new tt.Popup({ className: "user-location-popup" }).setHTML("<p >Your marked location</p>")
+                    yourMarkedLocation.setPopup(userLocationPopup).togglePopup()
+                    const center = new tt.LngLat(tourData?.data?.startingPoint?.lon, tourData?.data?.startingPoint?.lat);
+                    map.setCenter(center)
+
                     tourData.data && tourData.data?.tourPlan?.length > 0 && tourData.data?.tourPlan?.forEach(async (marker, index) => {
                         const color = [
                             "#FF5733", "#FFC300", "#4CAF50", "#3498DB", "#9B59B6",
@@ -60,11 +67,10 @@ const Map = () => {
                                     ],
                                 })
 
-                            console.log(routes)
                             const routeCoordinates = routes.routes[0].legs[0].points.map(point => {
                                 return [point.lng, point.lat];
                             })
-                            console.log(routeCoordinates);
+
 
                             map.addSource(`route-${index}`, {
                                 type: 'geojson',
@@ -93,9 +99,11 @@ const Map = () => {
                             });
                         }
                     });
-                    const center = new tt.LngLat(tourData?.data?.tourPlan[0]?.lon, tourData?.data?.tourPlan[0]?.lat);
-                    map.setCenter(center)
+
+
+
                 })
+
                 setMap(map); setMapInitialized(true);
                 return () => map.remove();
 
@@ -103,8 +111,7 @@ const Map = () => {
                 console.error("Error initializing TomTom map:", error);
             }
         };
-        initTT();
-        if (!mapInitialized) {
+        if (!mapInitialized && tourData.data) {
             initTT();
         }
 
@@ -116,7 +123,7 @@ const Map = () => {
             }
         };
 
-    }, [mapInitialized]);
+    }, [mapInitialized, tourData.data]);
 
     return (
         <div className="p-4 ">
@@ -134,7 +141,7 @@ const Map = () => {
                         <div className="p-3 bg-slate-300 w-full rounded-md shadow-xl">
                             <p className="text-lg font-medium uppercase text-gray-700 my-2 ">{index + 1}{"."} {data.name}</p>
                             <p className="text-sm font-normal italic">{data.formatted}</p>
-                            <p className="flex flex-wrap gap-2 mt-2">{data.categories.map((s) => {
+                            <p className="flex flex-wrap gap-2 mt-2">{data?.categories?.map((s) => {
                                 return <span className="text-xs p-2 bg-slate-500 rounded-sm text-white">{s}</span>
                             })}</p>
                         </div>

@@ -19,8 +19,8 @@ const Map = () => {
     })
     const options = [
         { label: "Religious", value: "religion" },
-        { label: "Wildlife", value: "natural,national_park" },
-        { label: "Park", value: "national_park,beach" },
+        { label: "Wildlife", value: "national_park" },
+        { label: "Park", value: "natural,national_park,beach" },
         { label: "Historical", value: "building.tourism,building.historic" },
         { label: "Fun", value: "entertainment" },
         { label: "Sport", value: "sport" },
